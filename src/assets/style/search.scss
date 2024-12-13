@@ -1,3 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Spartan:wght@300;400;500&family=Montserrat:wght@500;700&display=swap");
+
+$primaryColor: hsl(225, 50%, 48%);
+$secondaryColor: hsl(180, 17%, 95%);
+$colorOne: hsl(15, 74%, 70%);
+$colorTwo: hsl(68, 85%, 35%);
+$hoverColor: hsl(225, 56%, 59%);
+$whiteColor: hsl(0, 0%, 100%);
+$blackColor: hsl(0, 0%, 12%);
+$textColor: hsl(240, 1%, 48%);
+$borderColor: hsl(0, 0%, 83%);
+$whiteColorDim: hsl(0, 0%, 93%);
+$grayBg: hsl(0, 0%, 96%);
+$grayText: rgb(145, 145, 145);
+$inputColor: hsl(330, 12%, 97%);
+$boxShadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+$transition: 0.4s ease;
+
 .flight-search {
     height: 80vh; // Use a percentage-based height (adjustable)
     max-height: 100vh; // Ensure no scrolling happens if content overflows
@@ -72,7 +91,7 @@
 
             .button-group {
                 .btn {
-                    background-color: #003366;
+                    background-color: #0055a5;
                     border: none;
                     padding: 12px 30px;
                     color: white;
@@ -82,10 +101,58 @@
                     transition: all 0.3s ease;
 
                     &:hover {
-                        background-color: #0055a5;
+
+                        background-color: #01274d;
                     }
                 }
             }
         }
+    }
+}
+
+// navbar
+.navBar {
+    position: fixed;
+    flex-direction: column;
+    width: 100%;
+    height: 9%;
+    z-index: 100;
+
+    box-shadow: #333;
+    background-color: #04364A;
+    opacity: 99%;
+
+    .navBarOne,
+    .navBarTwo {
+        box-shadow: #333;
+
+        justify-content: space-between;
+
+        width: 100%;
+        height: 7%;
+        position: fixed;
+
+
+        opacity: 90%;
+    }
+
+    .navBar {
+
+        .icon:hover {
+            color: #176B87;
+        }
+
+    }
+
+    .navBarTwo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        top: 1rem;
+        padding: 1.5rem 5rem;
+        position: fixed;
+        transition: 1.5s ease-in-out;
+        color: #ccc;
+
     }
 }

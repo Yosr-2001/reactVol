@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../../main.scss"; // Custom styles for professional look
+import "../../main.scss";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import "../../assets/style/search.scss";
@@ -18,7 +18,7 @@ function FlightSearch() {
   const [classType, setClassType] = useState("Economy");
 
   React.useEffect(() => {
-    Aos.init({ duration: 1000 }); // Animation on scroll
+    Aos.init({ duration: 1000 });
   }, []);
 
   return (

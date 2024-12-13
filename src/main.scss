@@ -121,14 +121,18 @@ h2 {
   flex-direction: column;
   width: 100%;
   z-index: 100;
+  opacity: 3%;
+
 
   .navBarOne,
   .navBarTwo {
+
     justify-content: space-between;
     padding: 1.5rem 5rem;
     width: 100%;
     position: fixed;
-
+    padding: 20px;
+    opacity: 99%;
   }
 
   .navBar {
@@ -141,6 +145,7 @@ h2 {
   }
 
   .navBarTwo {
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -173,10 +178,10 @@ h2 {
           .listItem {
             padding: 0.5rem 0;
             cursor: pointer;
-            color: $blackColor;
+            // color: $blackColor;
 
             &:hover {
-              color: $primaryColor;
+              color: #003f66;
               font-weight: 800;
             }
           }
@@ -216,15 +221,17 @@ h2 {
   }
 
   .flightManagerText {
-    color: #c4e1ff;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+    color: #f4f4f4;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 25px;
 
   }
 
   .flightManagerText:hover {
-    color: #4d9ef5;
-
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: #b6d4e6;
     font-weight: bold;
     transform: scale(0.985);
     transition: color 0.3s ease;

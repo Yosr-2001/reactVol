@@ -10,84 +10,71 @@ const Signup = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState('Utilisateur');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const usenavigate = useNavigate();
 
     const handleRegister = (e) => {
         e.preventDefault();
+
         if (password !== confirmPassword) {
             setError('Passwords do not match!');
             return;
         }
 
-        // Validations (ensure that form data is valid)
         if (!username || !email || !password || !confirmPassword) {
             setError('Please fill in all fields.');
             return;
         }
 
-        // Check for validation
-        if (validate()) {
-            let inputobj = {
-                "userName": username,
-                "email": email,
-                "password": password,
-                "role": role || 'Utilisateur'
-            };
+        if (!validate()) {
+            setError('Please ensure all fields are correct.');
+            return;
+        }
 
-            // Make API call to register
-            fetch("http://localhost:5235/api/Compte/Register", {
-                method: 'POST',
-                headers: { 'content-type': 'application/json' },
-                body: JSON.stringify(inputobj)
+        let inputobj = {
+            userName: username,
+            email: email,
+            password: password,
+            role: role || 'Utilisateur',
+        };
+
+        fetch('http://localhost:5235/api/Compte/Register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(inputobj),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
             })
-                .then((res) => {
-                    if (!res.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return res.json();  // Try to parse the JSON response
-                })
-                .then((resp) => {
-                    console.log(resp);
-                    // If response is JSON
-                    if (resp.message) {
-                        setSuccessMessage(resp.message); // Assuming the response has a message field
-                        setError('');
-                        // Redirect or handle success
-                    } else {
-                        setError('Unexpected response format');
-                    }
-                })
-                .catch((err) => {
-                    // If JSON parsing fails or network issues
-                    console.error('Error:', err);
-                    setError(`Registration failed due to: ${err.message}`);
-                    setSuccessMessage('');
-                });
-
-        }
+            .then((resp) => {
+                console.log(resp);
+                if (resp && resp.message) {
+                    setSuccessMessage(resp.message);
+                    setError('');
+                    setTimeout(() => usenavigate('/'), 2000);
+                } else {
+                    setError('Unexpected response format');
+                }
+            })
+            .catch((err) => {
+                console.error('Error:', err);
+                setError(`Registration failed due to: ${err.message}`);
+                setSuccessMessage('');
+            });
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.stopPropagation();
-            setError('Please fill in all required fields and make sure the passwords match.');
-            setSuccessMessage('');
-        } else {
-            // Handle the registration logic here
-            setError('');
-            setSuccessMessage('');
-        }
-        setValidated(true);
-    };
-
-    // Validation function to check if all fields are filled and passwords match
     const validate = () => {
-        return username.length > 0 && email.length > 0 && password.length > 0 && confirmPassword === password;
+        return (
+            username.length > 0 &&
+            email.length > 0 &&
+            password.length > 0 &&
+            confirmPassword === password
+        );
     };
 
     return (
