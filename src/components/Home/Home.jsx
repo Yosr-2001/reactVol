@@ -5,7 +5,6 @@ import Aos from 'aos'
 import 'aos/dist/aos.css'
 import { Button } from 'react-bootstrap'
 import Navbar from '../Navbar/Navbar'
-import FlightSearch from '../Search/Search'
 import { Link } from 'react-router-dom'
 
 const Home = () => {

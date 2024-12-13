@@ -1,16 +1,16 @@
 .flight-search {
-    height: 100vh; // Use a percentage-based height (adjustable)
+    height: 80vh; // Use a percentage-based height (adjustable)
     max-height: 100vh; // Ensure no scrolling happens if content overflows
     position: relative;
+    background-color: white;
 
 
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0;
-    overflow: hidden; // Prevent overflow and scrolling
-    margin-top: 0;
+    padding: 5px;
+    // overflow: hidden;  
 
     .search-form-container {
 
@@ -19,7 +19,7 @@
         z-index: 2;
         background-color: #ffffff;
         opacity: 90%;
-        padding: 10px 15px;
+        padding: 0px 15px;
         border-radius: 12px;
         // box-shadow: 14px 15px 35px rgba(0, 0, 0, 0.1);
         width: 100%;
@@ -27,6 +27,7 @@
         text-align: center;
         overflow: hidden;
         flex-direction: column;
+        margin-top: 0px;
 
         form {
             display: flex;

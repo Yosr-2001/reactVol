@@ -12,13 +12,16 @@ function App() {
   return (
     <>
       <div style={{ height: '80vh', width: '60vw' }}>
+
         <Router>
-          <Navbar />
+
+
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
+
             <Route path="/sign-in" element={<Signin />} />
             <Route path="/sign-up" element={<Signup />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/add-avion" element={<AvionForm />} />
 
 
