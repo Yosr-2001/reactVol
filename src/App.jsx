@@ -13,7 +13,7 @@ function App() {
     <>
       <div style={{ height: '80vh', width: '60vw' }}>
         <Router>
-          <Navbar />
+         
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
