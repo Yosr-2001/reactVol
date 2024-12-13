@@ -1,0 +1,90 @@
+.flight-search {
+    height: 100vh; // Use a percentage-based height (adjustable)
+    max-height: 100vh; // Ensure no scrolling happens if content overflows
+    position: relative;
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+    overflow: hidden; // Prevent overflow and scrolling
+    margin-top: 0;
+
+    .search-form-container {
+
+
+        position: relative;
+        z-index: 2;
+        background-color: #ffffff;
+        opacity: 90%;
+        padding: 10px 15px;
+        border-radius: 12px;
+        // box-shadow: 14px 15px 35px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+        text-align: center;
+        overflow: hidden;
+        flex-direction: column;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1px; // Space between form fields
+            height: 100%;
+            justify-content: center; // Center form elements vertically
+        }
+
+        .form-group {
+            margin-top: 0;
+
+            label {
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 2px;
+                color: #333;
+                text-align: justify;
+            }
+
+            .form-control {
+                padding: 10px 10px;
+                font-size: 1rem;
+                width: 100%;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                background-color: #f5f5f5;
+                color: #333;
+                transition: all 0.3s ease;
+                outline: none;
+                margin-top: auto;
+
+
+            }
+
+            select,
+            input {
+                font-family: 'Helvetica Neue', Arial, sans-serif;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+
+            .button-group {
+                .btn {
+                    background-color: #003366;
+                    border: none;
+                    padding: 12px 30px;
+                    color: white;
+                    font-size: 1rem;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        background-color: #0055a5;
+                    }
+                }
+            }
+        }
+    }
+}

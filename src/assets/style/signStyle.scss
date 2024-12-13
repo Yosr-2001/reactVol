@@ -1,0 +1,206 @@
+/* Fullscreen Flight Background */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    background: #f5fbff;
+    /* Deep blue sky */
+}
+
+.flight-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://img.freepik.com/premium-photo/plane-is-flying-clouds-with-words-flight-left-side_867452-5769.jpg') no-repeat center center fixed;
+    /* Add a realistic cloud image */
+    background-size: cover;
+    animation: moveClouds 60s linear infinite;
+    z-index: -1;
+}
+
+/* Flying Animation of Clouds */
+@keyframes moveClouds {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 100% 0;
+    }
+}
+
+/* The cockpit card */
+.cockpit-card {
+    background: rgba(255, 255, 255, 0.9);
+    /* Slight transparency */
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0px 6px 40px rgba(0, 0, 0, 0.2);
+    max-width: 420px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    margin-top: 10vh;
+    animation: popIn 1s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+/* Pop-in Animation for the card */
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Form and Fields Styling */
+.form-control {
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    color: #333;
+    border-radius: 25px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+/* Button with a Takeoff Animation */
+button {
+    background: #00bfff;
+    color: white;
+    font-weight: bold;
+    border-radius: 30px;
+    padding: 1rem 2rem;
+    width: 100%;
+    font-size: 1.1rem;
+    border: none;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background: #009acd;
+    transform: scale(1.05);
+}
+
+/* Social Media Buttons (Social Flight Options) */
+.social-buttons a {
+    width: 50px;
+    height: 50px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #3b5998;
+    /* Facebook color */
+    border-radius: 50%;
+    color: white;
+    font-size: 1.5rem;
+    margin: 0.5rem;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.social-buttons a:hover {
+    background: #007bff;
+    transform: scale(1.1);
+}
+
+/* Title and Text Styling */
+h2 {
+    font-size: 2.2rem;
+    color: #003366;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.text-secondary {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #777;
+}
+
+/* Flying Plane Animation */
+@keyframes flyPlane {
+    0% {
+        transform: translateX(-100px) rotate(10deg);
+    }
+
+    50% {
+        transform: translateX(50vw) rotate(0deg);
+    }
+
+    100% {
+        transform: translateX(150vw) rotate(-10deg);
+    }
+}
+
+/* Airplane Animation */
+.airplane {
+    position: absolute;
+    top: 25%;
+    left: -100px;
+    width: 200px;
+    height: auto;
+    background: url('/assets/airplane.png') no-repeat center;
+    background-size: contain;
+    animation: flyPlane 10s linear infinite;
+    z-index: 2;
+}
+
+/* Flight Path Dash Animation */
+.flight-path {
+    position: absolute;
+    top: 28%;
+    left: -100px;
+    width: 0;
+    height: 0;
+    border-left: 3px dashed #007bff;
+    border-bottom: 3px dashed #007bff;
+    animation: flightPathAnimation 10s linear infinite;
+}
+
+/* Flight Path Animation */
+@keyframes flightPathAnimation {
+    0% {
+        left: -100px;
+        transform: rotate(0deg);
+    }
+
+    50% {
+        left: 50vw;
+        transform: rotate(10deg);
+    }
+
+    100% {
+        left: 150vw;
+        transform: rotate(20deg);
+    }
+}
+
+/* Fine-tuned for Mobile */
+@media (max-width: 768px) {
+    .cockpit-card {
+        padding: 2rem;
+        margin-top: 5vh;
+    }
+
+    .social-buttons a {
+        width: 40px;
+        height: 40px;
+    }
+}
