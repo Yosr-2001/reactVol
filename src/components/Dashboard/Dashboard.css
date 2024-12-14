@@ -1,0 +1,142 @@
+/* Général - Fond gris très clair */
+body {
+    background-color: #f1f1f1; /* Gris très clair */
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #e9ecef; /* Gris clair pour la sidebar */
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0; /* Positionner la sidebar au-dessus de la navbar */
+    left: 0;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    transition: all 0.3s ease;
+    z-index: 1; /* Assurer que la sidebar soit au-dessus de la navbar */
+}
+
+.sidebar:hover {
+    width: 270px; /* Élargissement au survol */
+}
+
+.sidebar-title {
+    color: #495057; /* Gris foncé doux */
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-nav li {
+    margin: 25px 0; /* Espacer les liens davantage */
+}
+
+.sidebar-nav li a {
+    text-decoration: none;
+    color: #495057; /* Gris foncé doux */
+    font-size: 18px; /* Agrandir les liens */
+    display: block;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav li a:hover {
+    background-color: #343a40; /* Gris foncé au survol */
+    color: white;
+    transform: scale(1.05); /* Agrandissement légèrement au survol */
+    border-radius: 10px; /* Rayon de bordure pour un effet de cadre */
+}
+
+.sidebar-nav li a svg {
+    margin-right: 15px;
+    font-size: 20px; /* Taille des icônes */
+}
+
+.sidebar-nav li a:hover svg {
+    transform: rotate(360deg); /* Animation de rotation */
+}
+
+/* Main content */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px);
+    transition: margin-left 0.3s ease;
+}
+
+.main-content:hover {
+    margin-left: 270px; /* Ajustement de la marge gauche si la sidebar est élargie */
+}
+
+/* Navbar */
+.custom-navbar {
+    background: linear-gradient(45deg, #ffffff, #f8f9fa); /* Dégradé blanc et beige clair */
+    color: #495057;
+    border-radius: 15px;
+    margin: 0;
+    padding: 10px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    position: fixed; /* Pour garder la navbar en haut */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999; /* Assurer que la navbar soit au-dessus du contenu */
+}
+
+.custom-navbar .navbar-brand {
+    font-size: 24px;
+    font-weight: 700; /* Texte en gras pour "Dashboard" */
+    color: #495057; /* Gris foncé */
+    position: absolute; /* Positionner "Dashboard" à l'extrême gauche */
+    left: 20px;
+}
+
+.custom-navbar .nav-link {
+    color: #495057;
+    font-size: 16px;
+    padding: 10px 20px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    border-radius: 8px;
+    margin-left: 30px; /* Espacer les liens */
+}
+
+.custom-navbar .nav-link:hover {
+    background-color: #343a40; /* Gris foncé au survol */
+    color: white;
+    border-radius: 8px; /* Ajouter un rayon de bordure */
+}
+
+/* Contenu principal */
+.container.mt-5 {
+    margin-top: 120px; /* Décalage pour éviter que la navbar et la sidebar ne se chevauchent */
+}
+
+/* Animation de la sidebar sur petit écran */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px; /* Réduire la largeur de la sidebar sur les petits écrans */
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .sidebar:hover {
+        width: 200px;
+    }
+
+    .custom-navbar {
+        background: linear-gradient(45deg, #ffffff, #f8f9fa); /* Dégradé similaire sur petits écrans */
+    }
+}

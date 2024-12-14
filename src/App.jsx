@@ -8,6 +8,7 @@ import Signin from './components/SignInUp/signin'
 import Signup from './components/SignInUp/Signup'
 import AvionForm from './components/Avion/AvionForm'
 import Offers from './components/Offre/Offres'
+import Dashboard from './components/Dashboard/DashBoard'
 function App() {
 
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/add-avion" element={<AvionForm />} />
             <Route path="/offers" element={<Offers />} />
+            <Route path="/dashboard" element={<Dashboard />} />
 
 
           </Routes>
