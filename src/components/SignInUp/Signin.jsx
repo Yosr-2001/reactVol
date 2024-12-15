@@ -36,9 +36,11 @@ const Signin = () => {
                 console.log(resp);
 
                 sessionStorage.setItem('username', username);
-                sessionStorage.setItem('jwttoken', resp.token);  
+                sessionStorage.setItem('jwttoken', resp.token);
                 sessionStorage.setItem('role', resp.roles)
                 console.log("role user connecté:", resp.roles);
+                console.log("session storage contains :", sessionStorage)
+
                 setSuccessMessage('Login successful! Redirecting...');
                 if (resp.roles == "Admin")
                     setTimeout(() => usenavigate('/Dashboard'), 1500);

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { FiLogOut } from 'react-icons/fi';
 
 const Navbar = () => {
   const [noBg, addBg] = useState('navBarTwo');
-
+  const navigate = useNavigate();
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY >= 10) {
@@ -18,6 +18,12 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  const handleLogout = () => {
+    sessionStorage.clear();
+    console.log("session storage contains :", sessionStorage)
+    navigate('/sign-in');
+
+  };
 
   return (
     <div className="navBar flex">
@@ -30,10 +36,10 @@ const Navbar = () => {
           <Nav.Link className="listItem" as={Link} to="/about">About</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/offers">Offers</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/reservations">Reservations</Nav.Link>
-          <Link to="/sign-in"> <button className="logoutButton">
+          <button className="logoutButton" onClick={handleLogout}>
             <FiLogOut className="logoutIcon" />
             Log Out
-          </button></Link>
+          </button>
         </ul>
       </div>
     </div>
