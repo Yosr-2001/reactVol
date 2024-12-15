@@ -36,11 +36,13 @@ const Signin = () => {
                 console.log(resp);
 
                 sessionStorage.setItem('username', username);
-                sessionStorage.setItem('jwttoken', resp.token); // Save token
-
+                sessionStorage.setItem('jwttoken', resp.token);  
+                sessionStorage.setItem('role', resp.roles)
+                console.log("role user connecté:", resp.roles);
                 setSuccessMessage('Login successful! Redirecting...');
-                setError('');
-                setTimeout(() => usenavigate('/'), 1500);
+                if (resp.roles == "Admin")
+                    setTimeout(() => usenavigate('/Dashboard'), 1500);
+                else setTimeout(() => usenavigate('/'), 1500);
             } catch (err) {
                 setError(`Login Failed: ${err.message}`);
                 setSuccessMessage('');
