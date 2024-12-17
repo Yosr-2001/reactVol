@@ -10,7 +10,7 @@ const HistoriqueReservations = () => {
     useEffect(() => {
         const fetchReservations = async () => {
             try {
-                const userId = sessionStorage.getItem('userId'); // Assuming you store userId after login
+                const userId = sessionStorage.getItem('userId');
                 if (!userId) {
                   setError('User ID not found.');
                   return;
@@ -27,8 +27,7 @@ const HistoriqueReservations = () => {
             };
         
             fetchReservations();
-          }, []); // Empty array ensures this runs only once after the component mounts
-        
+          }, []);
           if (loading) return <p>Loading...</p>;
           if (error) return <p>{error}</p>;
         
