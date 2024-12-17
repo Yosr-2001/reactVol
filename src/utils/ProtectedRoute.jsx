@@ -12,7 +12,6 @@ const ProtectedRoute = ({ allowedRoles }) => {
          return <Navigate to="/forbidden" replace />;
     }
 
-    // If authenticated and has the correct role, render the requested component
     return <Outlet />;
 };
 
