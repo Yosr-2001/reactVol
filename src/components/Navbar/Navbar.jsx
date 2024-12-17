@@ -36,6 +36,8 @@ const Navbar = () => {
           <Nav.Link className="listItem" as={Link} to="/about">About</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/offers">Offers</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/reservations">Reservations</Nav.Link>
+          <Nav.Link className="listItem" as={Link} to="/vols">Explorer</Nav.Link>
+
           <button className="logoutButton" onClick={handleLogout}>
             <FiLogOut className="logoutIcon" />
             Log Out

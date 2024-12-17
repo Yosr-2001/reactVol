@@ -2,7 +2,6 @@ import './App.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import Navbar from './components/Navbar/Navbar'
 import Home from './components/Home/Home'
-import Search from './components/Search/Search'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Signin from './components/SignInUp/signin'
 import Signup from './components/SignInUp/Signup'
@@ -11,7 +10,9 @@ import Offers from './components/Offre/Offres'
 import Dashboard from './components/Dashboard/DashBoard'
 import Forbidden from './utils/Forbidden'
 import ProtectedRoute from './utils/ProtectedRoute'
-import { RiAddFill } from 'react-icons/ri'
+import About from './About/About'
+import SearchFlights from './components/Flights/SearchFlights'
+import ListFlights from './components/Flights/ListFlights'
 function App() {
 
   return (
@@ -28,8 +29,10 @@ function App() {
 
             {/**user pages  */}
             <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
+            <Route path="/search" element={<SearchFlights />} />
+            <Route path="/vols" element={<ListFlights />} />
             <Route path="/offers" element={<Offers />} />
+            <Route path="/about" element={<About />} />
 
             {/**admin pages*/}
 

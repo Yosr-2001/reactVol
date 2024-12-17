@@ -6,13 +6,15 @@ export const apiRequest = async (url, method, body = null) => {
      *  the ClaimTypes.NameIdentifier, which contains the user ID. Even though this ID
      *  isn't explicitly returned in the response, it is embedded in the JWT token. */
     let userId = null;
-    if (token) {
-        const decodedToken = jwt_decode(token);  // Decodes the token to a JS object
-        userId = decodedToken?.nameid;  // Extract user ID from the token
+    //pb avec jwt_decode !!!!
+    // if (token) {
+    //     const decodedToken = jwt_decode(token);  // Decodes the token to a JS object
+    //     userId = decodedToken?.nameid;  // Extract user ID from the token
 
-        console.log("decoded token ", decodedToken);
-        console.log("userID from decoded ", userId);
-    }
+    // }
+
+    // console.log("decoded token ", decodedToken);
+    // console.log("userID from decoded ", userId);
 
     const headers = {
         'Content-Type': 'application/json',
@@ -24,7 +26,9 @@ export const apiRequest = async (url, method, body = null) => {
         headers,
         ...(body && { body: JSON.stringify(body) })
     };
-
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
     const response = await fetch(url, options);
 
     if (response.status === 401) {
@@ -37,6 +41,7 @@ export const apiRequest = async (url, method, body = null) => {
         const error = await response.json();
         throw new Error(error.message || 'API request failed');
     }
+
 
     return response.json();
 };

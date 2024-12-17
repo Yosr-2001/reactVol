@@ -277,18 +277,18 @@ h2 {
   }
 }
 
-
 .flight-search {
-
+  padding-top: 20%;
+  margin-top: 20%;
   border-radius: 15px;
-  max-width: 800px;
+  max-width: 100%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-  margin: 15rem auto;
+  margin: 0%;
   animation: fade-in 1s ease-in-out;
   transition: transform 0.3s;
   text-align: justify;
-
+  overflow: visible;
+  /* Ensures dropdowns or pop-ups like calendar are shown */
 
   &:hover {
     transform: translateY(-10px);
@@ -300,7 +300,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-
+  overflow: visible;
+  /* Ensures dropdowns or pop-ups are shown */
 }
 
 .form-group {
@@ -313,24 +314,21 @@ h2 {
   font-size: 1.2rem;
   font-weight: 600;
   color: #495057;
-  margin-bottom: 0.5rem;
 }
 
 .form-control {
-  padding: 0.75rem 0rem;
+
+  width: 100%;
+  padding: 0.75rem 1rem;
 
   border: none;
   border-radius: 5px;
   font-size: 1rem;
   transition: box-shadow 0.2s;
   background: #fff;
-  font-size: 1rem;
   color: #212529;
-  background-color: #fff;
   border: 1px solid #ced4da;
-  border-radius: 5px;
   box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
     border-color: #007bff;
@@ -341,6 +339,20 @@ h2 {
   &::placeholder {
     color: #adb5bd;
   }
+}
+
+.react-datepicker-popper {
+  z-index: 1050 !important;
+}
+
+.react-datepicker {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.react-datepicker__triangle {
+  display: none;
 }
 
 .form-control:focus {
@@ -354,11 +366,9 @@ h2 {
 }
 
 .btn-primary:hover {
-  /* Darker blue on hover */
   background-color: #a7c1dd;
 
   transform: scale(0.985);
-  /* Slight reduction in size */
 }
 
 .btn-primary span {
