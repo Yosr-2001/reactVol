@@ -9,16 +9,26 @@ import AvionForm from './components/Avion/AvionForm'
 import Offers from './components/Offre/Offres'
 import Dashboard from './components/Dashboard/DashBoard'
 import Forbidden from './utils/Forbidden'
-import ProtectedRoute from './utils/ProtectedRoute'
 import About from './About/About'
-import SearchFlights from './components/Flights/SearchFlights'
-import ListFlights from './components/Flights/ListFlights'
+import SearchFlights from './components/Search/SearchFlights'
+import ListFlights from './components/Search/ListFlights'
+import ProtectedRoute from './utils/ProtectedRoute'
+import PassengerForm from './components/Passager/Passager'
+import Results from './components/Search/Results'
+import Paiement from './components/Paiement/Paiement'
+import Ticket from './components/Paiement/Ticket'
+import HistoriqueReservations from './components/Historique/HistoriqueReservations'
 function App() {
 
   return (
     <>
-      <div style={{ height: '80vh', width: '60vw' }}>
-
+      <div style={{
+        height: '80vh',
+        width: '66vw',
+        margin: 'auto',
+        overflowY: 'auto',
+      }}>
+        <div></div>
         <Router>
 
           <Routes>
@@ -33,7 +43,12 @@ function App() {
             <Route path="/vols" element={<ListFlights />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/about" element={<About />} />
+            <Route path="/results" element={<Results />} />
 
+            <Route path="/passenger-form" element={<PassengerForm />} />
+            <Route path="/paiement" element={<Paiement />} />
+            <Route path="/ticket" element={<Ticket />} />
+            <Route path="/reservations" element={<HistoriqueReservations />} />
             {/**admin pages*/}
 
             <Route

@@ -37,7 +37,8 @@ const Signin = () => {
 
                 sessionStorage.setItem('username', username);
                 sessionStorage.setItem('jwttoken', resp.token);
-                sessionStorage.setItem('role', resp.roles)
+                sessionStorage.setItem('role', resp.roles);
+                sessionStorage.setItem('email', resp.email);
                 console.log("role user connecté:", resp.roles);
                 console.log("session storage contains :", sessionStorage)
 

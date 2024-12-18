@@ -26,9 +26,7 @@ export const apiRequest = async (url, method, body = null) => {
         headers,
         ...(body && { body: JSON.stringify(body) })
     };
-    if (body) {
-        options.body = JSON.stringify(body);
-    }
+
     const response = await fetch(url, options);
 
     if (response.status === 401) {

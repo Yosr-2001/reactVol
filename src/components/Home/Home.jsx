@@ -4,8 +4,9 @@ import { useEffect } from 'react'
 import Aos from 'aos'
 import 'aos/dist/aos.css'
 import { Button } from 'react-bootstrap'
-import Navbar from '../Navbar/Navbar'
 import { Link } from 'react-router-dom'
+import Navbar from '../Navbar/Navbar'
+import { FaResearchgate, FaSearch, FaSearchDollar, FaSearchLocation } from 'react-icons/fa'
 
 const Home = () => {
 
@@ -31,7 +32,7 @@ const Home = () => {
             </p>
             <div className="cta-buttons">
               <Link to="/search">
-                <Button className="cta-primary" >Search Flights</Button></Link>
+                <Button className="cta-primary" >Chercher vols   <FaSearchLocation style={{ marginLeft: "10px" }}></FaSearchLocation></Button></Link>
 
             </div>
           </div>

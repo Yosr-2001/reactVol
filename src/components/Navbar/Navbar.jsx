@@ -3,6 +3,10 @@ import { Nav } from 'react-bootstrap';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { FiLogOut } from 'react-icons/fi';
 
+import "../../main.scss";
+
+
+
 const Navbar = () => {
   const [noBg, addBg] = useState('navBarTwo');
   const navigate = useNavigate();
