@@ -11,22 +11,23 @@ import Dashboard from './components/Dashboard/DashBoard'
 import Forbidden from './utils/Forbidden'
 import About from './About/About'
 import SearchFlights from './components/Search/SearchFlights'
-import ListFlights from './components/Search/ListFlights'
 import ProtectedRoute from './utils/ProtectedRoute'
 import PassengerForm from './components/Passager/Passager'
 import Results from './components/Search/Results'
 import Paiement from './components/Paiement/Paiement'
 import Ticket from './components/Paiement/Ticket'
 import HistoriqueReservations from './components/Historique/HistoriqueReservations'
+import ListFlights from './components/Flights/ListFlights'
 function App() {
 
   return (
     <>
       <div style={{
-        height: '80vh',
+        height: '90vh',
         width: '66vw',
         margin: 'auto',
         overflowY: 'auto',
+        paddingTop: '5%'
       }}>
         <div></div>
         <Router>

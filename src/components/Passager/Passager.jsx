@@ -9,6 +9,7 @@ const PassengerForm = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const flight = location.state?.selectedFlight || {};
+
     const [prixTotal, setPrixTotal] = useState(0);
 
     const [formData, setFormData] = useState({
@@ -17,7 +18,8 @@ const PassengerForm = () => {
         emailPassager: "",
         dateNaissance: "",
         telephonePassager: "",
-        numeroPasseport: "", classType: "Economy"
+        numeroPasseport: "",
+        classType: "Economy"
     });
 
     const handleChange = (e) => {
@@ -64,7 +66,14 @@ const PassengerForm = () => {
             alert("Il y a eu un problème lors de la réservation.");
         }
     };
-
+    const handleNext = () => {
+        navigate("/paiement", {
+            state: {
+                flight: selectedFlight,
+                body,
+            },
+        });
+    };
     return (
         <>
             <Navbar />
@@ -192,7 +201,7 @@ const PassengerForm = () => {
                     </Row>
 
                     <div className="text-center">
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" onClick={handleNext} type="submit">
                             Valider et Passer au paiement{" "}
                             <FaGooglePay style={{ marginLeft: '10px', height: '30px', width: '30px' }} />
                         </Button>

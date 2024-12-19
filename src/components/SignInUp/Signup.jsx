@@ -96,8 +96,8 @@ const Signup = () => {
                         <h2>Join the Flight</h2>
                         <p className="text-secondary">Create your account</p>
                     </div>
-                    {error && <Alert variant="danger">{error}</Alert>} {/* Error alert */}
-                    {successMessage && <Alert variant="success">{successMessage}</Alert>} {/* Success alert */}
+                    {error && <Alert variant="danger">{error}</Alert>}
+                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
                     <Form noValidate validated={validated} onSubmit={handleRegister}>
                         <Form.Group className="mb-3">
                             <Form.Control
