@@ -8,6 +8,13 @@ import Signup from './components/SignInUp/Signup'
 import AvionForm from './components/Avion/AvionForm'
 import Offers from './components/Offre/Offres'
 import Dashboard from './components/Dashboard/DashBoard'
+<<<<<<< HEAD
+import Dash from './components/Dash'
+import OffreList from './components/Offre/OfferList'
+
+
+
+=======
 import Forbidden from './utils/Forbidden'
 import About from './About/About'
 import SearchFlights from './components/Search/SearchFlights'
@@ -17,7 +24,11 @@ import Results from './components/Search/Results'
 import Paiement from './components/Paiement/Paiement'
 import Ticket from './components/Paiement/Ticket'
 import HistoriqueReservations from './components/Historique/HistoriqueReservations'
+<<<<<<< HEAD
 import ListFlights from './components/Flights/ListFlights'
+=======
+>>>>>>> b71d3d68f7a1a426d347cea149bfd6bf66a31d8c
+>>>>>>> a727a173db194593e9bf91eb5a04d77aff35f468
 function App() {
 
   return (
@@ -43,6 +54,12 @@ function App() {
             <Route path="/search" element={<SearchFlights />} />
             <Route path="/vols" element={<ListFlights />} />
             <Route path="/offers" element={<Offers />} />
+<<<<<<< HEAD
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dash" element={<Dash />} />
+            <Route path="/offre" element={<OffreList />} />
+              
+=======
             <Route path="/about" element={<About />} />
             <Route path="/results" element={<Results />} />
 
@@ -67,6 +84,7 @@ function App() {
 
 
 
+>>>>>>> b71d3d68f7a1a426d347cea149bfd6bf66a31d8c
 
           </Routes>
 
