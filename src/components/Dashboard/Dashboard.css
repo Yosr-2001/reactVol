@@ -1,31 +1,38 @@
 /* Général - Fond gris très clair */
 body {
-    background-color: #f1f1f1; /* Gris très clair */
+    background-color: #f1f1f1;
+    /* Gris très clair */
     margin: 0;
     font-family: Arial, sans-serif;
 }
 
 /* Sidebar */
 .sidebar {
-    background-color: #e9ecef; /* Gris clair pour la sidebar */
+    background-color: #e9ecef;
+    /* Gris clair pour la sidebar */
     width: 250px;
     height: 100vh;
     position: fixed;
-    top: 0; /* Positionner la sidebar au-dessus de la navbar */
+    top: 0;
+    /* Positionner la sidebar au-dessus de la navbar */
     left: 0;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+    /* Ombre douce */
     transition: all 0.3s ease;
-    z-index: 1; /* Assurer que la sidebar soit au-dessus de la navbar */
+    z-index: 1;
+    /* Assurer que la sidebar soit au-dessus de la navbar */
 }
 
 .sidebar:hover {
-    width: 270px; /* Élargissement au survol */
+    width: 270px;
+    /* Élargissement au survol */
 }
 
 .sidebar-title {
-    color: #495057; /* Gris foncé doux */
+    color: #495057;
+    /* Gris foncé doux */
     font-size: 24px;
     margin-bottom: 30px;
     font-weight: 600;
@@ -37,66 +44,84 @@ body {
 }
 
 .sidebar-nav li {
-    margin: 25px 0; /* Espacer les liens davantage */
+    margin: 25px 0;
+    /* Espacer les liens davantage */
 }
 
 .sidebar-nav li a {
     text-decoration: none;
-    color: #495057; /* Gris foncé doux */
-    font-size: 18px; /* Agrandir les liens */
-    display: flex; /* Permet d'aligner le texte et l'icône */
-    align-items: center; /* Centrer verticalement */
+    color: #495057;
+    /* Gris foncé doux */
+    font-size: 18px;
+    /* Agrandir les liens */
+    display: flex;
+    /* Permet d'aligner le texte et l'icône */
+    align-items: center;
+    /* Centrer verticalement */
     padding: 10px;
     border-radius: 8px;
     transition: all 0.3s ease;
 }
 
 .sidebar-nav li a:hover {
-    background-color: #343a40; /* Gris foncé au survol */
+    background-color: #343a40;
+    /* Gris foncé au survol */
     color: white;
-    transform: scale(1.05); /* Agrandissement légèrement au survol */
-    border-radius: 10px; /* Rayon de bordure pour un effet de cadre */
+    transform: scale(1.05);
+    /* Agrandissement légèrement au survol */
+    border-radius: 10px;
+    /* Rayon de bordure pour un effet de cadre */
 }
 
 .sidebar-nav li a svg {
     margin-right: 15px;
-    font-size: 20px; /* Taille des icônes */
+    font-size: 20px;
+    /* Taille des icônes */
     transition: transform 0.3s ease;
 }
 
 .sidebar-nav li a:hover svg {
-    transform: rotate(360deg); /* Animation de rotation */
+    transform: rotate(360deg);
+    /* Animation de rotation */
 }
 
 
 /* Main content */
 .main-content {
     margin-left: 250px;
-    padding: 20px;
+    padding: 0px;
     width: calc(100% - 250px);
     transition: margin-left 0.3s ease;
 }
 
 .main-content:hover {
-    margin-left: 270px; /* Ajustement de la marge gauche si la sidebar est élargie */
+    margin-left: 270px;
+    /* Ajustement de la marge gauche si la sidebar est élargie */
 }
 
 /* Navbar */
 /* Navbar */
 .custom-navbar {
-    background: white; /* Fond blanc */
-    color: #343a40; /* Texte gris foncé */
+    background: white;
+    /* Fond blanc */
+    color: #343a40;
+    /* Texte gris foncé */
     padding: 15px 30px;
-    display: flex; /* Utiliser Flexbox */
-    justify-content: space-between; /* Séparer le titre et les liens */
+    display: flex;
+    /* Utiliser Flexbox */
+    justify-content: space-between;
+    /* Séparer le titre et les liens */
     align-items: center;
-    position: fixed; /* Fixe la navbar en haut */
+    position: fixed;
+    /* Fixe la navbar en haut */
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre douce */
-    border-bottom: 1px solid #dee2e6; /* Ligne de séparation */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Ombre douce */
+    border-bottom: 1px solid #dee2e6;
+    /* Ligne de séparation */
 }
 
 .navbar-brand {
@@ -105,42 +130,59 @@ body {
 }
 
 .nav-links {
-    list-style: none; /* Supprime les puces */
-    display: flex; /* Flexbox pour aligner les liens horizontalement */
-    gap: 20px; /* Espacement entre les liens */
-    margin-left: auto; /* Aligne les liens à droite */
-    margin-bottom: 0; /* Assure que les marges sont nulles */
+    list-style: none;
+    /* Supprime les puces */
+    display: flex;
+    /* Flexbox pour aligner les liens horizontalement */
+    gap: 20px;
+    /* Espacement entre les liens */
+    margin-left: auto;
+    /* Aligne les liens à droite */
+    margin-bottom: 0;
+    /* Assure que les marges sont nulles */
 }
 
 .nav-links li {
-    display: inline; /* Assure un affichage horizontal */
+    display: inline;
+    /* Assure un affichage horizontal */
 }
 
 .nav-links li a {
-    text-decoration: none; /* Supprime le soulignement */
-    color: #495057; /* Gris foncé */
-    font-size: 16px; /* Taille du texte */
-    font-weight: 500; /* Semi-gras */
-    transition: color 0.3s ease, background-color 0.3s ease; /* Animation fluide */
-    padding: 10px 15px; /* Ajoute de l'espace intérieur */
-    border-radius: 5px; /* Coins arrondis */
+    text-decoration: none;
+    /* Supprime le soulignement */
+    color: #495057;
+    /* Gris foncé */
+    font-size: 16px;
+    /* Taille du texte */
+    font-weight: 500;
+    /* Semi-gras */
+    transition: color 0.3s ease, background-color 0.3s ease;
+    /* Animation fluide */
+    padding: 10px 15px;
+    /* Ajoute de l'espace intérieur */
+    border-radius: 5px;
+    /* Coins arrondis */
 }
 
 .nav-links li a:hover {
-    background: #f1f1f1; /* Fond gris clair au survol */
-    color: #343a40; /* Texte légèrement plus foncé */
+    background: #f1f1f1;
+    /* Fond gris clair au survol */
+    color: #343a40;
+    /* Texte légèrement plus foncé */
 }
 
 
 /* Contenu principal */
 .container.mt-5 {
-    margin-top: 120px; /* Décalage pour éviter que la navbar et la sidebar ne se chevauchent */
+    margin-top: 120px;
+    /* Décalage pour éviter que la navbar et la sidebar ne se chevauchent */
 }
 
 /* Animation de la sidebar sur petit écran */
 @media (max-width: 768px) {
     .sidebar {
-        width: 200px; /* Réduire la largeur de la sidebar sur les petits écrans */
+        width: 200px;
+        /* Réduire la largeur de la sidebar sur les petits écrans */
     }
 
     .main-content {
@@ -153,114 +195,157 @@ body {
     }
 
     .custom-navbar {
-        background: linear-gradient(45deg, #ffffff, #f8f9fa); /* Dégradé similaire sur petits écrans */
+        background: linear-gradient(45deg, #ffffff, #f8f9fa);
+        /* Dégradé similaire sur petits écrans */
     }
 }
 
 /* Table Styling */
 .table {
-    width: 100%;
+    width: 1000px;
     border-collapse: collapse;
-    margin-top: 30px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Ombre plus profonde */
-    border-radius: 15px; /* Coins arrondis */
-    overflow: hidden; /* Contenu respectant les bords arrondis */
-    background-color: #ffffff; /* Fond blanc */
-    transition: all 0.3s ease; /* Animation de transition pour les effets */
+    margin-top: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    /* Ombre plus profonde */
+    border-radius: 15px;
+    /* Coins arrondis */
+    overflow: hidden;
+    max-width: 2000px;
+    /* Contenu respectant les bords arrondis */
+    background-color: #ffffff;
+    /* Fond blanc */
+    transition: all 0.3s ease;
+    /* Animation de transition pour les effets */
 }
 
 /* En-tête de table */
 .table th {
-    background-color: #cacfd4; /* Fond gris foncé */
-    color: rgb(5, 0, 0); /* Texte blanc */
+    background-color: #cacfd4;
+    /* Fond gris foncé */
+    color: rgb(5, 0, 0);
+    /* Texte blanc */
     text-align: left;
-    padding: 15px 20px; /* Espacement amélioré */
+    padding: 15px 20px;
+    /* Espacement amélioré */
     font-size: 16px;
     text-transform: uppercase;
-    border-bottom: 2px solid #dee2e6; /* Ligne de séparation claire */
-    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.1); /* Ombre interne pour plus de profondeur */
+    border-bottom: 2px solid #dee2e6;
+    /* Ligne de séparation claire */
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+    /* Ombre interne pour plus de profondeur */
 }
 
 /* Cellules de la table */
 .table td {
-    padding: 12px 20px;
-    color: #495057; /* Gris foncé doux */
-    border-bottom: 1px solid #dee2e6; /* Ligne de séparation légère */
+    padding: 5px 20px;
+    color: #495057;
+    /* Gris foncé doux */
+    border-bottom: 1px solid #dee2e6;
+    /* Ligne de séparation légère */
     font-size: 14px;
+    font-weight: 600;
     text-align: left;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Animation sur survol */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    /* Animation sur survol */
 }
 
 /* Ajouter un effet de survol sur les lignes */
 .table tr:hover {
-    background-color: #f1f1f1; /* Fond gris clair */
-    transform: translateY(-2px); /* Légère élévation des lignes */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre douce autour de la ligne survolée */
+    background-color: #f1f1f1;
+    /* Fond gris clair */
+    transform: translateY(-2px);
+    /* Légère élévation des lignes */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Ombre douce autour de la ligne survolée */
 }
 
 /* Lignes alternées pour une meilleure lisibilité */
 .table tbody tr:nth-child(odd) {
-    background-color: #fafafa; /* Fond gris très clair pour les lignes impaires */
+    background-color: #fafafa;
+    /* Fond gris très clair pour les lignes impaires */
 }
 
 .table tbody tr:nth-child(even) {
-    background-color: #ffffff; /* Fond blanc pour les lignes paires */
+    background-color: #ffffff;
+    /* Fond blanc pour les lignes paires */
 }
 
 /* Ajout d'un survol de cellule */
 .table td:hover {
-    background-color: #e9ecef; /* Changement de couleur au survol */
-    transform: scale(1.02); /* Légère mise en avant des cellules */
+    background-color: #e9ecef;
+    /* Changement de couleur au survol */
+    transform: scale(1.02);
+    /* Légère mise en avant des cellules */
 }
 
 /* Améliorer l'alignement et l'apparence des bordures */
-.table th, .table td {
-    border-left: 1px solid #dee2e6; /* Bordure légère entre les cellules */
+.table th,
+.table td {
+    border-left: 1px solid #dee2e6;
+    /* Bordure légère entre les cellules */
 }
 
-.table th:first-child, .table td:first-child {
-    border-left: none; /* Supprimer la bordure gauche pour la première cellule */
+.table th:first-child,
+.table td:first-child {
+    border-left: none;
+    /* Supprimer la bordure gauche pour la première cellule */
 }
 
 /* Bouton "Nouveau" */
 .table-header {
     display: flex;
-    justify-content: flex-end; /* Place le bouton à l'extrême droite */
-    margin-bottom: 15px; /* Espacement entre le bouton et le tableau */
+    justify-content: flex-end;
+    /* Place le bouton à l'extrême droite */
+    margin-bottom: 15px;
+    /* Espacement entre le bouton et le tableau */
 }
 
 /* Bouton "Nouveau" */
 .btn-new {
-    background-color: black; /* Couleur bleue pour le bouton */
-    color: white; /* Texte blanc */
-    font-size: 12px; /* Taille légèrement plus grande */
-    padding: 6px 12px; /* Espacement interne confortable */
+    background-color: black;
+    /* Couleur bleue pour le bouton */
+    color: white;
+    /* Texte blanc */
+    font-size: 12px;
+    /* Taille légèrement plus grande */
+    padding: 6px 12px;
+    /* Espacement interne confortable */
     border: none;
-    border-radius: 0px; /* Coins arrondis plus modérés */
-    font-weight: 600; /* Texte en semi-gras */
+    border-radius: 0px;
+    /* Coins arrondis plus modérés */
+    font-weight: 600;
+    /* Texte en semi-gras */
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
 .btn-new:hover {
-    background-color: #0056b3; /* Couleur bleue plus foncée au survol */
-    transform: scale(1.05); /* Légère mise en avant du bouton */
+    background-color: #0056b3;
+    /* Couleur bleue plus foncée au survol */
+    transform: scale(1.05);
+    /* Légère mise en avant du bouton */
 }
 
 /* Navbar */
 .custom-navbar {
-    background: rgb(245, 243, 243); /* Fond blanc */
-    color: #343a40; /* Texte gris foncé */
+    background: rgb(245, 243, 243);
+    /* Fond blanc */
+    color: #343a40;
+    /* Texte gris foncé */
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: fixed; /* Fixe la navbar en haut */
+    position: fixed;
+    /* Fixe la navbar en haut */
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre douce */
-    border-bottom: 1px solid #dee2e6; /* Ligne de séparation */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Ombre douce */
+    border-bottom: 1px solid #dee2e6;
+    /* Ligne de séparation */
 }
 
 .navbar-brand {
@@ -282,7 +367,8 @@ body {
 
 .nav-links li a {
     text-decoration: none;
-    color: #343a40; /* Gris foncé */
+    color: #343a40;
+    /* Gris foncé */
     font-size: 16px;
     font-weight: 500;
     transition: color 0.3s ease, background-color 0.3s ease;
@@ -291,7 +377,8 @@ body {
 }
 
 .nav-links li a:hover {
-    background: #f1f1f1; /* Fond gris clair au survol */
+    background: #f1f1f1;
+    /* Fond gris clair au survol */
     color: #495057;
 }
 
@@ -301,7 +388,8 @@ body {
     width: 250px;
     height: 100vh;
     position: fixed;
-    top: 70px; /* Décalage pour ne pas couvrir la navbar */
+    top: 70px;
+    /* Décalage pour ne pas couvrir la navbar */
     left: 0;
     padding: 20px;
     border-radius: 10px;
@@ -313,8 +401,8 @@ body {
 /* Main content */
 .main-content {
     margin-left: 250px;
-    margin-top: 70px; /* Compense la hauteur de la navbar */
+    margin-top: 70px;
+    /* Compense la hauteur de la navbar */
     padding: 20px;
     width: calc(100% - 250px);
 }
-

@@ -44,8 +44,8 @@ const Signin = () => {
 
                 setSuccessMessage('Login successful! Redirecting...');
                 if (resp.roles == "Admin")
-                    setTimeout(() => usenavigate('/Dashboard'), 1500);
-                else setTimeout(() => usenavigate('/'), 1500);
+                    setTimeout(() => usenavigate('/Dash'), 1500);
+                else setTimeout(() => usenavigate('/home'), 1500);
             } catch (err) {
                 setError(`Login Failed: ${err.message}`);
                 setSuccessMessage('');

@@ -1,106 +1,83 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { apiRequest } from '../../utils/api';
+import Navbar from '../Navbar/Navbar';
+import { Button } from 'react-bootstrap';
 
-const Paiement = () => {
-    const navigate = useNavigate();
+const PaymentForm = () => {
     const location = useLocation();
-    const { flight, passengerData } = location.state;
+    const navigate = useNavigate();
 
-    const [paymentData, setPaymentData] = useState({
-        cardName: "",
-        cardNumber: "",
-        expiryDate: "",
-        cvv: "",
-    });
+    const { formData, selectedFlight } = location.state || {};
+    console.log('formData:', formData);
+    console.log('selectedFlight:', selectedFlight);
+    console.log('selectedFlight.prix:', selectedFlight.prixVol);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setPaymentData({ ...paymentData, [name]: value });
+    if (!formData || !selectedFlight) {
+        return <div>Error: Les informations de passager ou de vol sont manquantes.</div>;
+    }
+    const [paymentStatus, setPaymentStatus] = useState(null);
+    const [error, setError] = useState(null);
+
+    if (!formData || !selectedFlight) {
+        console.log('formData', formData);
+        console.log('selectedFlight', selectedFlight);
+        console.log('Prix Vol:', selectedFlight.prixVol);
+
+        return <div>Error: Les informations de passager ou de vol sont manquantes.</div>;
+    }
+    const prixVol = selectedFlight.prixVol;
+    const nbrePassagers = formData.nbrePassagers || 1;
+
+    if (isNaN(prixVol) || isNaN(nbrePassagers)) {
+        return <div>Error: Le prix du vol ou le nombre de passagers est invalide.</div>;
+    }
+    const prixTotal = prixVol * nbrePassagers;
+    const reservationData = {
+        IdPassager: formData.idPassager,
+        IdVol: selectedFlight.idVol,
+        TypeClasse: formData.typeClasse || 'Economy',
+        NbrePassagers: nbrePassagers || 1,
+        DateReservation: new Date().toISOString(),
+        StatutReservation: 'Reservation_confirmee',
+        PrixReservationTotal: prixTotal,
+        // idAeroportDepart: selectedFlight.idAeroportDepart,
+        // idAeroportArrivee: selectedFlight.idAeroportArrivee,
     };
 
     const handlePayment = async () => {
-        const reservationData = {
-            idPassager: passengerData.passport,
-            idVol: flight.idVol,
-            nbrePassagers: 1,
-            typeClasse: "Economy",
-            prixReservationTotal: flight.prixVol,
-            statutReservation: "Reservation_confirmee",
-        };
-
         try {
-            const response = await fetch("http://localhost:5235/api/reservation", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(reservationData),
-            });
+            const response = await apiRequest('http://localhost:5235/api/reservation', 'POST', reservationData);
+            setPaymentStatus('Paiement réussi!');
+            console.log('Données envoyées au backend :', reservationData);
 
-            if (response.ok) {
-                const reservation = await response.json();
-                alert("Reservation successful!");
-                navigate("/reservation-details", { state: { reservation } });
-            } else {
-                alert("Error in reservation");
-            }
+            navigate('/home', { state: { reservation: response.data } });
         } catch (error) {
-            console.error("Payment error:", error);
+            console.error('Erreur lors de la réservation:', error);
+            setError(error?.response?.data?.message || 'Une erreur est survenue.');
+            setPaymentStatus('Échec du paiement.');
         }
     };
 
+
     return (
-        <div className="container">
-            <h2>Payment Form</h2>
-            <form>
-                <div className="form-group">
-                    <label>Card Name</label>
-                    <input
-                        type="text"
-                        name="cardName"
-                        value={paymentData.cardName}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Card Number</label>
-                    <input
-                        type="text"
-                        name="cardNumber"
-                        value={paymentData.cardNumber}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Expiry Date</label>
-                    <input
-                        type="text"
-                        name="expiryDate"
-                        value={paymentData.expiryDate}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>CVV</label>
-                    <input
-                        type="password"
-                        name="cvv"
-                        value={paymentData.cvv}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <button type="button" onClick={handlePayment} className="btn btn-success mt-3">
-                    Pay and Confirm
-                </button>
-            </form>
+        <div>
+            <Navbar />
+            <h2>Formulaire de Paiement</h2>
+            <div>
+                <p><strong>Passager:</strong> {formData.nomPassager} {formData.prenomPassager}</p>
+                <p><strong>Email:</strong> {formData.emailPassager}</p>
+                <p><strong>Vol sélectionné:</strong> {selectedFlight.numeroVol}</p>
+                <p><strong>Prix total:</strong> {reservationData.PrixReservationTotal} €</p>
+                <p><strong>Classe:</strong> {reservationData.TypeClasse}</p>
+                <p><strong>Nombre de passagers:</strong> {reservationData.NbrePassagers}</p>
+            </div>
+            <Button onClick={handlePayment}>Payer maintenant</Button>
+            {paymentStatus && <p>{paymentStatus}</p>}
+            {error && <p>{error}</p>}
         </div>
     );
 };
 
-export default Paiement;
+export default PaymentForm;

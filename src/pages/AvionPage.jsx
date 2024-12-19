@@ -3,11 +3,10 @@ import { getAvions, deleteAvion } from '../Api/Api';
 import AvionAjout from './AvionAjout';
 import AvionModif from './AvionModif';
 
-
 const AvionPage = () => {
   const [avions, setAvions] = useState([]);
-  const [currentAvion, setCurrentAvion] = useState(null); // Avion en cours de modification
-  const [view, setView] = useState('list'); // list, add, edit
+  const [currentAvion, setCurrentAvion] = useState(null);
+  const [view, setView] = useState('list');
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -71,9 +70,22 @@ const AvionPage = () => {
                   <td>{avion.capaciteAvion}</td>
                   <td>{avion.fabriquantAvion}</td>
                   <td>
-                    <button onClick={() => handleEdit(avion)} className="btn btn-warning btn-sm">Modifier</button>
-                    <button onClick={() => handleDelete(avion.idAvion)} className="btn btn-danger btn-sm ms-2">Supprimer</button>
+                    <button
+                      onClick={() => handleEdit(avion)}
+                      className="btn btn-warning btn-sm me-2"
+                    >
+                      ✏️ Modifier
+                    </button>
+                    <button
+                      onClick={() => handleDelete(avion.idAvion)}
+                      className="btn btn-danger btn-sm"
+                    >
+                      🗑️ Supprimer
+                    </button>
                   </td>
+
+
+
                 </tr>
               ))}
             </tbody>

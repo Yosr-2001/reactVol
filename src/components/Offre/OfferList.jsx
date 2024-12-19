@@ -28,7 +28,6 @@ const OfferList = () => {
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error}</p>;
 
-  // Créer un dictionnaire pour accéder facilement aux vols par ID
   const volDict = vols.reduce((acc, vol) => {
     acc[vol.idVol] = vol;
     return acc;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { FaPlane, FaAirbnb, FaBuilding, FaUser , FaTicketAlt } from 'react-icons/fa';
+import { FaPlane, FaAirbnb, FaBuilding, FaUser, FaTicketAlt } from 'react-icons/fa';
 import './Dashboard.css';
 import axios from "axios";
 
@@ -21,7 +21,7 @@ const Dashboard = () => {
 
 
 
-  
+
 
   const fetchData = async (url) => {
     setLoading(true);
@@ -134,7 +134,7 @@ const Dashboard = () => {
     }
     setShowForm(true);
     setFormData({});
- setEditingId(null); // Reset editing ID when creating a new entry
+    setEditingId(null); // Reset editing ID when creating a new entry
   };
 
   const handleFormSubmit = async (e) => {
@@ -278,25 +278,25 @@ const Dashboard = () => {
 
 
 
-            <div className="mb-3"> 
-<label>Type d'Avion</label> 
-<input type="text" name="typeAvion" className="form-control" value={formData.typeAvion || ''} onChange={handleInputChange} required /> 
-</div> 
-<div className="mb-3"> 
-<label> Aéroport Départ</label> 
-<select name="idAeroportDepart" className="form-control" value={formData.idAeroportDepart} onChange={handleInputChange} required > 
-<option value="">Sélectionnez un aéroport de départ</option> {aeroports.map((aeroport) => ( <option key={aeroport.idAeroport} value={aeroport.idAeroport}> {aeroport.nomAeroport} </option> ))} 
+            <div className="mb-3">
+              <label>Type d'Avion</label>
+              <input type="text" name="typeAvion" className="form-control" value={formData.typeAvion || ''} onChange={handleInputChange} required />
+            </div>
+            <div className="mb-3">
+              <label> Aéroport Départ</label>
+              <select name="idAeroportDepart" className="form-control" value={formData.idAeroportDepart} onChange={handleInputChange} required >
+                <option value="">Sélectionnez un aéroport de départ</option> {aeroports.map((aeroport) => (<option key={aeroport.idAeroport} value={aeroport.idAeroport}> {aeroport.nomAeroport} </option>))}
 
-</select> </div> <div className="mb-3"> 
-<label> Aéroport Arrivée</label> <select name="idAeroportArrivee" className="form-control" value={formData.idAeroportArrivee} onChange={handleInputChange} required > 
-<option value="">Sélectionnez un aéroport d'arrivée</option> {aeroports.map((aeroport) => ( <option key={aeroport.idAeroport} value={aeroport.idAeroport}> {aeroport.nomAeroport} </option> ))} 
-</select> </div> 
+              </select> </div> <div className="mb-3">
+              <label> Aéroport Arrivée</label> <select name="idAeroportArrivee" className="form-control" value={formData.idAeroportArrivee} onChange={handleInputChange} required >
+                <option value="">Sélectionnez un aéroport d'arrivée</option> {aeroports.map((aeroport) => (<option key={aeroport.idAeroport} value={aeroport.idAeroport}> {aeroport.nomAeroport} </option>))}
+              </select> </div>
 
-<div className="mb-3"> 
-<label>Avion</label> <select name="idAvion" className="form-control" value={formData.idAvion} onChange={handleInputChange} required > 
-<option value="">Sélectionnez un avion</option> {avions.map((avion) => ( <option key={avion.idAvion} value={avion.idAvion}> {avion.typeAvion}
-  {avion.typeAvion} </option> ))}
-</select> </div>
+            <div className="mb-3">
+              <label>Avion</label> <select name="idAvion" className="form-control" value={formData.idAvion} onChange={handleInputChange} required >
+                <option value="">Sélectionnez un avion</option> {avions.map((avion) => (<option key={avion.idAvion} value={avion.idAvion}> {avion.typeAvion}
+                  {avion.typeAvion} </option>))}
+              </select> </div>
 
 
 
@@ -357,7 +357,7 @@ const Dashboard = () => {
           </li>
           <li>
             <a href="#passengers" onClick={() => handleMenuClick('passengers', 'http://localhost:5235/api/Passager')}>
-              <FaUser  /> Passagers
+              <FaUser /> Passagers
             </a>
           </li>
           <li>
@@ -383,7 +383,7 @@ const Dashboard = () => {
         </Navbar>
 
         <div className="container mt-5">
-          <button  className="btn btn-success mb-3" class="btn-new" onClick={handleNew}>Nouveau</button>
+          <button className="btn btn-success mb-3" class="btn-new" onClick={handleNew}>Nouveau</button>
 
           {loading && <p>Chargement...</p>}
           {error && <p style={{ color: 'red' }}>{error}</p>}

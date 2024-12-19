@@ -35,10 +35,10 @@ const Navbar = () => {
         <Link to="/" className="flightManagerText">
           Flight Manager
         </Link>  <ul className="menu flex">
-          <Nav.Link className="listItem" as={Link} to="/">Home</Nav.Link>
+          <Nav.Link className="listItem" as={Link} to="/home">Home</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/search">Search</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/about">About</Nav.Link>
-          <Nav.Link className="listItem" as={Link} to="/offers">Offers</Nav.Link>
+          <Nav.Link className="listItem" as={Link} to="/offre">Offres</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/reservations">Reservations</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/vols">Explorer</Nav.Link>
 

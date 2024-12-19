@@ -49,8 +49,8 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      <h1>Bienvenue sur le Dashboard de Gestion des Vols</h1>
-      <p>Utilisez le menu de gauche pour naviguer entre les différentes sections.</p>
+      <h1>Bonjour <span style={{ fontWeight: 'bold' }}>{sessionStorage.getItem("username").toUpperCase()}  </span> sur votre dashboard</h1>
+      <p>Utilisez le menu de gauche pour naviguer entre les différentes sections</p>
       <div className="stats-section">
         <h2>Statistiques</h2>
         <div className="stats-cards">
@@ -80,7 +80,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-    
+
     </div>
   );
 };

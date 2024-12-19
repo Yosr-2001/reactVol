@@ -69,10 +69,22 @@ const AeroportPage = () => {
                   <td>{aeroport.nomAeroport}</td>
                   <td>{aeroport.villeAeroport}</td>
                   <td>{aeroport.paysAeroport}</td>
+
                   <td>
-                    <button onClick={() => handleEdit(aeroport)} className="btn btn-warning btn-sm">Modifier</button>
-                    <button onClick={() => handleDelete(aeroport.idAeroport)} className="btn btn-danger btn-sm ms-2">Supprimer</button>
+                    <button
+                      onClick={() => handleEdit(aeroport)}
+                      className="btn btn-warning btn-sm me-2"
+                    >
+                      ✏️ Modifier
+                    </button>
+                    <button
+                      onClick={() => handleDelete(aeroport.idAeroport)}
+                      className="btn btn-danger btn-sm"
+                    >
+                      🗑️ Supprimer
+                    </button>
                   </td>
+
                 </tr>
               ))}
             </tbody>

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { createAvion } from '../Api/Api';
+import { useNavigate } from 'react-router-dom';
 
 const AvionAjout = ({ refreshData }) => {
   const [formData, setFormData] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -24,9 +25,10 @@ const AvionAjout = ({ refreshData }) => {
       setFormData({});
       setSubmitting(false);
       refreshData();
+      navigate("/dash");
     } catch (error) {
       console.error('Erreur lors de la soumission du formulaire', error);
-      console.log('Erreur Response:', error.response?.data); // Affichez les détails de la réponse
+      console.log('Erreur Response:', error.response?.data);
       setError(`Erreur lors de la soumission du formulaire : ${error.response?.data?.message || error.message}`);
       setSubmitting(false);
     }

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { updateAvion } from '../Api/Api';
+import { useNavigate } from 'react-router-dom';
 
 const AvionModif = ({ formData, setFormData, refreshData }) => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -23,6 +24,7 @@ const AvionModif = ({ formData, setFormData, refreshData }) => {
       setFormData({});
       setSubmitting(false);
       refreshData();
+      navigate('/dash');
     } catch (error) {
       console.error('Erreur lors de la soumission du formulaire', error);
       console.log('Erreur Response:', error.response?.data); // Affichez les détails de la réponse

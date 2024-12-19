@@ -5,8 +5,8 @@ import VolModif from './VolModif';
 
 const VolPage = () => {
   const [vols, setVols] = useState([]);
-  const [currentVol, setCurrentVol] = useState(null); // Vol en cours de modification
-  const [view, setView] = useState('list'); // list, add, edit
+  const [currentVol, setCurrentVol] = useState(null);
+  const [view, setView] = useState('list');
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -47,8 +47,9 @@ const VolPage = () => {
 
   return (
     <div>
+
       {view === 'list' && (
-        <>
+        <div>
           <h3>Liste des Vols</h3>
           {error && <p style={{ color: 'red' }}>{error}</p>}
           <button className="btn btn-primary" onClick={handleAdd}>Ajouter un Vol</button>
@@ -59,7 +60,7 @@ const VolPage = () => {
                 <th>Numéro</th>
                 <th>Heure de Départ</th>
                 <th>Heure d'Arrivée</th>
-                <th>Statut</th>
+
                 <th>Porte</th>
                 <th>Type Avion</th>
                 <th>Avion</th>
@@ -76,22 +77,34 @@ const VolPage = () => {
                   <td>{vol.numeroVol}</td>
                   <td>{vol.heureDepart}</td>
                   <td>{vol.heureArrivee}</td>
-                  <td>{vol.statut}</td>
                   <td>{vol.porte}</td>
                   <td>{vol.typeAvion}</td>
                   <td>{vol.idAvion}</td>
                   <td>{vol.idAeroportDepart}</td>
                   <td>{vol.idAeroportArrivee}</td>
                   <td>{vol.prixVol}</td>
+
+
                   <td>
-                    <button onClick={() => handleEdit(vol)} className="btn btn-warning btn-sm">Modifier</button>
-                    <button onClick={() => handleDelete(vol.idVol)} className="btn btn-danger btn-sm ms-2">Supprimer</button>
+                    <button
+                      onClick={() => handleEdit(vol)}
+                      className="btn btn-warning btn-sm me-2"
+                    >
+                      ✏️ Modifier
+                    </button>
+                    <button
+                      onClick={() => handleDelete(vol.idVol)}
+                      className="btn btn-danger btn-sm"
+                    >
+                      🗑️ Supprimer
+                    </button>
                   </td>
+
                 </tr>
               ))}
             </tbody>
           </table>
-        </>
+        </div>
       )}
       {view === 'add' && (
         <VolAjout refreshData={fetchVols} />

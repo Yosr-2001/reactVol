@@ -26,6 +26,14 @@ const ListFlights = () => {
 
 
     }, []);
+    const handleReserveClick = (flight) => {
+        if (!flight) {
+            console.error('No flight selected.');
+            return;
+        }
+        navigate("/passenger-form", { state: { selectedFlight: flight } });
+    };
+
     return (
         < >
             <Navbar />
@@ -61,9 +69,11 @@ const ListFlights = () => {
                                                     fontWeight: 'bold',
                                                     transition: 'background-color 0.3s',
                                                 }}
+                                                onClick={() => handleReserveClick(flight)} // Add this line to pass the selected flight
                                             >
-                                                Reserver     <FaPlane style={{ marginLeft: '8px' }} />
+                                                Reserver <FaPlane style={{ marginLeft: '8px' }} />
                                             </Button>
+
                                         </Card.Body>
                                     </Card>
                                 </Col>

@@ -7,11 +7,13 @@ import { apiRequest } from "../../utils/api";
 
 const PassengerForm = () => {
     const location = useLocation();
+    const flight = location.state?.selectedFlight;
+    if (!flight) {
+        console.error("No selected flight data available.");
+        return <div>Error: Vol sélectionné manquant.</div>;
+    }
+
     const navigate = useNavigate();
-    const flight = location.state?.selectedFlight || {};
-
-    const [prixTotal, setPrixTotal] = useState(0);
-
     const [formData, setFormData] = useState({
         nomPassager: "",
         prenomPassager: "",
@@ -19,21 +21,27 @@ const PassengerForm = () => {
         dateNaissance: "",
         telephonePassager: "",
         numeroPasseport: "",
-        classType: "Economy"
+        classType: "Economy",
     });
+
+    const [prixTotal, setPrixTotal] = useState(0);
+
+    const calculPrixReservationTotal = (prixVolBrut, classType, nbPassagers = 1) => {
+        const multiplier = classType === "Business" ? 2.0 : classType === "Premium" ? 1.5 : 1.0;
+        return prixVolBrut * multiplier * nbPassagers;
+    };
+
+    useEffect(() => {
+        const total = calculPrixReservationTotal(flight.prixVol, formData.classType, 1);
+        setPrixTotal(total);
+    }, [formData.classType, flight.prixVol]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    const calculPrixReservationTotal = (prixVolBrut, classType, nbPassagers = 1) => {
-        const multiplier = classType === "Business" ? 2.0 : classType === "Premium" ? 1.5 : 1.0;
-        return prixVolBrut * multiplier * nbPassagers;
-    };
-    useEffect(() => {
-        const total = calculPrixReservationTotal(flight.prixVol, formData.classType, 1);
-        setPrixTotal(total);
-    }, [formData.classType, flight.prixVol]);
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,34 +54,23 @@ const PassengerForm = () => {
         }
 
         const body = {
-            nomPassager: formData.nomPassager,
-            prenomPassager: formData.prenomPassager,
-            emailPassager: formData.emailPassager,
-            dateNaissance: formData.dateNaissance,
-            telephonePassager: formData.telephonePassager,
-            numeroPasseport: formData.numeroPasseport,
+            ...formData,
+            prixTotal: prixTotal,
         };
 
         try {
-            const response = await apiRequest("http://localhost:5235/api/Passager", 'POST', body);
+            const response = await apiRequest("http://localhost:5235/api/Passager", "POST", body);
 
             console.log("Passager ===> ", response);
-            navigate("/paiement", { state: { prixTotal, formData } });
-
-
+            navigate("/paiement", { state: { prixTotal, formData, selectedFlight: flight } });
         } catch (error) {
             console.error("Error submitting form:", error);
             alert("Il y a eu un problème lors de la réservation.");
         }
     };
-    const handleNext = () => {
-        navigate("/paiement", {
-            state: {
-                flight: selectedFlight,
-                body,
-            },
-        });
-    };
+
+
+
     return (
         <>
             <Navbar />
@@ -125,7 +122,6 @@ const PassengerForm = () => {
                                     value={formData.emailPassager}
                                     onChange={handleChange}
                                     required
-                                    // pattern="^[a-zA-Z0-9._%+-]@[a-zA-Z].[a-zA-Z]{2,}$"
                                     title="L'email doit être sous la forme : exemple@exple.com"
                                     placeholder="Exemple: exemple@exple.com"
                                 />
@@ -194,15 +190,17 @@ const PassengerForm = () => {
                                     <option value="Business">Business</option>
                                 </Form.Select>
                             </Form.Group>
-                        </Col><br></br>
-                        <Col md={6}>
-                            <h5 className="mt-5" >Prix : <strong style={{ color: 'red' }}>{prixTotal} DT</strong></h5>
+                        </Col>
+                        <Col md={5}>
+                            <h5 className="mt-5">Prix : <span style={{ color: 'green' }}><strong>{prixTotal} DT</strong></span></h5>
                         </Col>
                     </Row>
 
+
+
                     <div className="text-center">
-                        <Button variant="primary" onClick={handleNext} type="submit">
-                            Valider et Passer au paiement{" "}
+                        <Button variant="primary" type="submit">
+                            Passer au paiement{" "}
                             <FaGooglePay style={{ marginLeft: '10px', height: '30px', width: '30px' }} />
                         </Button>
                     </div>
@@ -212,4 +210,4 @@ const PassengerForm = () => {
     );
 };
 
-export default PassengerForm;
+export default PassengerForm; 

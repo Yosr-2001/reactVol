@@ -63,7 +63,7 @@ const Signup = () => {
                     console.log("role user connecté:", resp.roles);
                     console.log("session storage contains :", sessionStorage)
 
-                    setTimeout(() => usenavigate('/'), 2000);
+                    setTimeout(() => usenavigate('/home'), 2000);
                 } else {
                     setError('Unexpected response format');
                 }

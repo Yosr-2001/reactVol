@@ -8,13 +8,10 @@ import Signup from './components/SignInUp/Signup'
 import AvionForm from './components/Avion/AvionForm'
 import Offers from './components/Offre/Offres'
 import Dashboard from './components/Dashboard/DashBoard'
-<<<<<<< HEAD
 import Dash from './components/Dash'
 import OffreList from './components/Offre/OfferList'
 
 
-
-=======
 import Forbidden from './utils/Forbidden'
 import About from './About/About'
 import SearchFlights from './components/Search/SearchFlights'
@@ -24,21 +21,24 @@ import Results from './components/Search/Results'
 import Paiement from './components/Paiement/Paiement'
 import Ticket from './components/Paiement/Ticket'
 import HistoriqueReservations from './components/Historique/HistoriqueReservations'
-<<<<<<< HEAD
 import ListFlights from './components/Flights/ListFlights'
-=======
->>>>>>> b71d3d68f7a1a426d347cea149bfd6bf66a31d8c
->>>>>>> a727a173db194593e9bf91eb5a04d77aff35f468
+import HomePage from './pages/HomePage'
+import AvionPage from './pages/AvionPage'
 function App() {
 
   return (
     <>
       <div style={{
         height: '90vh',
-        width: '66vw',
-        margin: 'auto',
+        width: '65vw',
+        margin: '0px',
         overflowY: 'auto',
-        paddingTop: '5%'
+        overflowX: 'auto',
+        paddingTop: '5%',
+        paddingBottom: '0%',
+        marginBottom: '0px'
+        // padding: '0%',
+        // paddingRight: '0px'
       }}>
         <div></div>
         <Router>
@@ -49,17 +49,15 @@ function App() {
             <Route path="/sign-up" element={<Signup />} />
             <Route path="/forbidden" element={<Forbidden />} />
 
+            <Route path="/" element={<Signin />} />
             {/**user pages  */}
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/search" element={<SearchFlights />} />
             <Route path="/vols" element={<ListFlights />} />
             <Route path="/offers" element={<Offers />} />
-<<<<<<< HEAD
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dash" element={<Dash />} />
             <Route path="/offre" element={<OffreList />} />
-              
-=======
+
             <Route path="/about" element={<About />} />
             <Route path="/results" element={<Results />} />
 
@@ -67,6 +65,8 @@ function App() {
             <Route path="/paiement" element={<Paiement />} />
             <Route path="/ticket" element={<Ticket />} />
             <Route path="/reservations" element={<HistoriqueReservations />} />
+            <Route path="/homePage" element={<HomePage />} />
+            <Route path="/avionPage" element={<AvionPage />} />
             {/**admin pages*/}
 
             <Route
@@ -84,7 +84,6 @@ function App() {
 
 
 
->>>>>>> b71d3d68f7a1a426d347cea149bfd6bf66a31d8c
 
           </Routes>
 
