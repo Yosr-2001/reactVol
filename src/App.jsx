@@ -9,6 +9,11 @@ import Signup from './components/SignInUp/Signup'
 import AvionForm from './components/Avion/AvionForm'
 import Offers from './components/Offre/Offres'
 import Dashboard from './components/Dashboard/DashBoard'
+import Dash from './components/Dash'
+import OffreList from './components/Offre/OfferList'
+
+
+
 function App() {
 
   return (
@@ -26,7 +31,9 @@ function App() {
             <Route path="/add-avion" element={<AvionForm />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/dashboard" element={<Dashboard />} />
-
+            <Route path="/dash" element={<Dash />} />
+            <Route path="/offre" element={<OffreList />} />
+              
 
           </Routes>
 
