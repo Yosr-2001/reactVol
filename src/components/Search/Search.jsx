@@ -1,117 +1,91 @@
-import React, { useState } from "react";
-import DatePicker from "react-datepicker";
+import React, { useState } from 'react';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 import "react-datepicker/dist/react-datepicker.css";
-import "../../main.scss";
-import Aos from "aos";
-import "aos/dist/aos.css";
-import "../../assets/style/search.scss";
-import { Button } from "react-bootstrap";
-import Navbar from "../Navbar/Navbar";
-import "../../main.scss";
 
-function FlightSearch() {
-  const [tripType, setTripType] = useState("Round-trip");
+import "../../assets/style/search.scss";
+import Navbar from '../Navbar/Navbar';
+import { FaSearch } from 'react-icons/fa';
+
+function FlightSearch({ onSearch }) {
   const [departure, setDeparture] = useState("");
   const [destination, setDestination] = useState("");
   const [travelDates, setTravelDates] = useState([null, null]);
-  const [travelers, setTravelers] = useState(1);
-  const [classType, setClassType] = useState("Economy");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  React.useEffect(() => {
-    Aos.init({ duration: 1000 });
-  }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const searchCriteria = {
+      departure,
+      destination,
+      dateDepart: startDate,
+     dateRetour: endDate,
+    };
+    onSearch(searchCriteria);
+  };
 
   return (
-    <><Navbar />
+    <>
+      <Navbar />
       <div className="flight-search">
-
-        <div className="search-form-container">
-          <form className="search-form">
-
-            <div className="form-group">     <label htmlFor="tripType">Trip Type</label>
-              <select
-                value={tripType}
-                onChange={(e) => setTripType(e.target.value)}
-                className="form-control"
-              >
-                <option value="Round-trip">Round-trip</option>
-                <option value="One-way">One-way</option>
-                <option value="Multi-city">Multi-city</option>
-              </select>
-            </div>
-
-
-            <div className="form-group"> <label htmlFor="departure">Departure</label>
-              <input
-                type="text"
-                value={departure}
-                onChange={(e) => setDeparture(e.target.value)}
-                placeholder="Departure"
-                className="form-control"
-              />
-            </div>
-
-
-            <div className="form-group"><label htmlFor="destination">Destination</label>
-              <input
-                type="text"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder="Destination"
-                className="form-control"
-              />
-            </div>
-
-
-            <div className="form-group"> <label htmlFor="travelDates">Travel Dates</label>
-              <DatePicker
-                selected={travelDates[0]}
-                onChange={(update) => setTravelDates(update)}
-                startDate={travelDates[0]}
-                endDate={travelDates[1]}
-                selectsRange
-                dateFormat="dd MMM yyyy"
-                className="form-control"
-              />
-            </div>
-
-            <div className="form-group">   <label htmlFor="travelers">Number of Travelers</label>
-              <select
-                value={travelers}
-                onChange={(e) => setTravelers(Number(e.target.value))}
-                className="form-control"
-              >
-                {[...Array(10).keys()].map((num) => (
-                  <option key={num + 1} value={num + 1}>
-                    {num + 1} {num + 1 === 1 ? "adult" : "adults"}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-
-            <div className="form-group">            <label htmlFor="classType">Travel Class</label>
-
-              <select
-                value={classType}
-                onChange={(e) => setClassType(e.target.value)}
-                className="form-control"
-              >
-                <option value="Economy">Economy</option>
-                <option value="Business">Business</option>
-                <option value="First">First</option>
-              </select>
-            </div>
-
-
-            <div className="form-group button-group">
-              <Button type="submit" className="btn btn-primary">
-                Search Flights
+        <br></br>
+        <h2>Chercher vols</h2>
+        <form className="search-form" onSubmit={handleSubmit}>
+          <Row className="form-row">
+            <Col md="auto">
+              <Form.Group>
+                <Form.Label>Start Date</Form.Label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="form-control"
+                />
+              </Form.Group>
+            </Col>
+            <Col md="auto">
+              <Form.Group>
+                <Form.Label>End Date</Form.Label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="form-control"
+                />
+              </Form.Group>
+            </Col>
+            <Col md="auto">
+              <Form.Group>
+                <Form.Label>Departure</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={departure}
+                  onChange={(e) => setDeparture(e.target.value)}
+                  placeholder="Enter departure city"
+                />
+              </Form.Group>
+            </Col>
+            <Col md="auto">
+              <Form.Group>
+                <Form.Label>Destination</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  placeholder="Enter destination city"
+                />
+              </Form.Group>
+            </Col>
+            <Col md={12} className="button-group">
+              <Button type="submit" className="btn btn-primary mt-4">
+                Rechercher <FaSearch style={{ marginLeft: '8px' }} />
               </Button>
-            </div>
-          </form>
-        </div>
-      </div></>
+            </Col>
+          </Row>
+
+        </form>
+      </div>
+    </>
   );
 }
 

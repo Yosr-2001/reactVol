@@ -118,20 +118,26 @@ h2 {
 // navbar
 .navBar {
   position: fixed;
-  flex-direction: column;
-  width: 100%;
-  z-index: 100;
-  opacity: 3%;
+  // flex-direction: column;
+  width: 90%;
+  z-index: 50;
+  opacity: 90%;
 
+  background-color: #bababa;
+
+  justify-content: space-between;
+  padding: 2rem 100%;
 
   .navBarOne,
   .navBarTwo {
+    background-color: #003f66;
 
     justify-content: space-between;
-    padding: 1.5rem 5rem;
+    padding: 1rem 2rem;
     width: 100%;
     position: fixed;
-    padding: 20px;
+    padding: 2rem 100%;
+    height: 5%;
     opacity: 99%;
   }
 
@@ -145,7 +151,7 @@ h2 {
   }
 
   .navBarTwo {
-
+    background-color: #003f66;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -225,7 +231,7 @@ h2 {
 
     color: #f4f4f4;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 30px;
 
   }
 
@@ -277,18 +283,18 @@ h2 {
   }
 }
 
-
 .flight-search {
-
+  padding-top: 20%;
+  margin-top: 20%;
   border-radius: 15px;
-  max-width: 800px;
+  max-width: 100%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-  margin: 15rem auto;
+  margin: 0%;
   animation: fade-in 1s ease-in-out;
   transition: transform 0.3s;
   text-align: justify;
-
+  overflow: visible;
+  /* Ensures dropdowns or pop-ups like calendar are shown */
 
   &:hover {
     transform: translateY(-10px);
@@ -300,7 +306,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-
+  overflow: visible;
+  /* Ensures dropdowns or pop-ups are shown */
 }
 
 .form-group {
@@ -313,24 +320,21 @@ h2 {
   font-size: 1.2rem;
   font-weight: 600;
   color: #495057;
-  margin-bottom: 0.5rem;
 }
 
 .form-control {
-  padding: 0.75rem 0rem;
+
+  width: 100%;
+  padding: 0.75rem 1rem;
 
   border: none;
   border-radius: 5px;
   font-size: 1rem;
   transition: box-shadow 0.2s;
   background: #fff;
-  font-size: 1rem;
   color: #212529;
-  background-color: #fff;
   border: 1px solid #ced4da;
-  border-radius: 5px;
   box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
     border-color: #007bff;
@@ -341,6 +345,20 @@ h2 {
   &::placeholder {
     color: #adb5bd;
   }
+}
+
+.react-datepicker-popper {
+  z-index: 1050 !important;
+}
+
+.react-datepicker {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.react-datepicker__triangle {
+  display: none;
 }
 
 .form-control:focus {
@@ -354,11 +372,9 @@ h2 {
 }
 
 .btn-primary:hover {
-  /* Darker blue on hover */
   background-color: #a7c1dd;
 
   transform: scale(0.985);
-  /* Slight reduction in size */
 }
 
 .btn-primary span {
@@ -950,59 +966,38 @@ h2 {
 }
 
 @media screen and (min-width: 768px) {
-  // .navBar {
-  //   position: fixed;
-  //   align-items: center;
 
-  //   top: 0;
-  //   width: 100%;
-  //   z-index: 1000;
-  //   /* Ensures the navbar stays above other elements */
-  //   background-color: white;
-  //   /* Optional: To avoid transparency issues */
-  //   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  //   /* Optional: Adds a slight shadow */
-  // }
-
-  // .navBarTwo {
-  //   position: relative;
-  //   transition: background-color 0.3s ease-in-out;
-  // }
-  .navBar {
+  .navBar,
+  .navBarTwo {
     position: fixed;
-    /* Fixes the navbar at the top */
     top: 0;
     left: 0;
-    width: 100%;
-    /* Ensures it spans the full width */
-    z-index: 1000;
-    /* Keeps it above other elements */
-    background-color: #fff;
-    /* Solid background for better visibility */
+    width: 50px;
+    opacity: 90%;
+    // z-index: 1000;
+    // background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px;
-
-    /* Slight shadow for depth */
+    background-color: #003f66;
     transition: background-color 0.3s ease-in-out;
   }
 
   .navBarTwo {
+    background-color: #003f66;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
-    /* Adjust for spacing */
+    padding: 0px 20px;
   }
 
   .logoDiv .logo {
     max-width: 150px;
-    /* Set a max width for the logo */
   }
 
   .menu {
     display: flex;
     list-style: none;
     gap: 20px;
-    /* Space between menu items */
+    background-color: #003f66;
   }
 
   .listItem {
@@ -1010,7 +1005,6 @@ h2 {
     font-size: 16px;
     font-weight: bold;
     color: #333;
-    /* Neutral text color */
     transition: color 0.3s ease;
   }
 
@@ -1205,7 +1199,7 @@ h2 {
       justify-content: space-between;
       align-items: center;
 
-
+      background-color: #003f66;
 
       .logoDiv {
         .logo {
@@ -1218,11 +1212,11 @@ h2 {
         gap: 0.5rem;
 
         .listItem {
-          padding: 0 0.5rem;
-          font-size: 14px;
+          padding: 0 0 rem;
+          font-size: 16px;
           cursor: pointer;
           color: $textColor;
-          font-weight: 700;
+          font-weight: 800;
 
           &:hover {
             color: $primaryColor;
@@ -1404,7 +1398,7 @@ h2 {
 
     .navBarOne,
     .navBarTwo {
-
+      background-color: #003f66;
       padding: 1rem 5rem;
     }
 
@@ -1455,6 +1449,8 @@ h2 {
   .navBar {
     .navBarTwo {
       .menu {
+        background-color: #003f66;
+
         gap: 1rem;
 
         .listItem,

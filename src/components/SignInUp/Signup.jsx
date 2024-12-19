@@ -56,6 +56,13 @@ const Signup = () => {
                 if (resp && resp.message) {
                     setSuccessMessage(resp.message);
                     setError('');
+                    sessionStorage.setItem('username', username);
+                    sessionStorage.setItem('jwttoken', resp.token);
+                    sessionStorage.setItem('role', "utilisateur");
+                    sessionStorage.setItem('email', resp.email);
+                    console.log("role user connecté:", resp.roles);
+                    console.log("session storage contains :", sessionStorage)
+
                     setTimeout(() => usenavigate('/'), 2000);
                 } else {
                     setError('Unexpected response format');
