@@ -7,13 +7,11 @@ import { apiRequest } from "../../utils/api";
 
 const PassengerForm = () => {
     const location = useLocation();
-    const flight = location.state?.selectedFlight;
-    if (!flight) {
-        console.error("No selected flight data available.");
-        return <div>Error: Vol sélectionné manquant.</div>;
-    }
-
     const navigate = useNavigate();
+    const flight = location.state?.selectedFlight || {};
+    const [prixTotal, setPrixTotal] = useState(0);
+    const [error, setError] = useState(null);
+
     const [formData, setFormData] = useState({
         nomPassager: "",
         prenomPassager: "",
@@ -21,10 +19,13 @@ const PassengerForm = () => {
         dateNaissance: "",
         telephonePassager: "",
         numeroPasseport: "",
-        classType: "Economy",
+        classType: "Economy"
     });
 
-    const [prixTotal, setPrixTotal] = useState(0);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
 
     const calculPrixReservationTotal = (prixVolBrut, classType, nbPassagers = 1) => {
         const multiplier = classType === "Business" ? 2.0 : classType === "Premium" ? 1.5 : 1.0;
@@ -36,40 +37,36 @@ const PassengerForm = () => {
         setPrixTotal(total);
     }, [formData.classType, flight.prixVol]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
 
         const passportRegex = /^[A-Z]{1}[0-9]{8}$/;
 
         if (!passportRegex.test(formData.numeroPasseport)) {
-            alert("Le numéro de passeport doit commencer par une lettre majuscule suivie de 8 chiffres (ex: E12345678).");
+            setError("Le numéro de passeport doit commencer par une lettre majuscule suivie de 8 chiffres (ex: E12345678).");
             return;
         }
 
         const body = {
-            ...formData,
-            prixTotal: prixTotal,
+            nomPassager: formData.nomPassager,
+            prenomPassager: formData.prenomPassager,
+            emailPassager: formData.emailPassager,
+            dateNaissance: formData.dateNaissance,
+            telephonePassager: formData.telephonePassager,
+            numeroPasseport: formData.numeroPasseport,
         };
 
         try {
-            const response = await apiRequest("http://localhost:5235/api/Passager", "POST", body);
-
+            const response = await apiRequest("http://localhost:5235/api/Passager", 'POST', body);
+            const idPassager = response.idPassager; // Assuming the response contains the idPassager
             console.log("Passager ===> ", response);
-            navigate("/paiement", { state: { prixTotal, formData, selectedFlight: flight } });
+            navigate("/paiement", { state: { prixTotal, formData, idPassager, idVol: flight.idVol } });
         } catch (error) {
             console.error("Error submitting form:", error);
-            alert("Il y a eu un problème lors de la réservation.");
+            setError("Il y a eu un problème lors de la réservation.");
         }
     };
-
-
 
     return (
         <>
@@ -97,18 +94,20 @@ const PassengerForm = () => {
                             </Form.Group>
                         </Col>
                         <Col md={6}>
-                            <Form.Label>Prénom <span style={{ color: 'red' }}>*</span></Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="prenomPassager"
-                                value={formData.prenomPassager}
-                                onChange={handleChange}
-                                required
-                                minLength="2"
-                                maxLength="50"
-                                pattern="^[A-Za-zÀ-ÿ ]+$"
-                                title="Le prénom doit contenir uniquement des lettres (accents autorisés) et des espaces."
-                            />
+                            <Form.Group controlId="prenomPassager" className="mb-3">
+                                <Form.Label>Prénom <span style={{ color: 'red' }}>*</span></Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="prenomPassager"
+                                    value={formData.prenomPassager}
+                                    onChange={handleChange}
+                                    required
+                                    minLength="2"
+                                    maxLength="50"
+                                    pattern="^[A-Za-zÀ-ÿ ]+$"
+                                    title="Le prénom doit contenir uniquement des lettres (accents autorisés) et des espaces."
+                                />
+                            </Form.Group>
                         </Col>
                     </Row>
 
@@ -176,7 +175,7 @@ const PassengerForm = () => {
                         </Col>
                     </Row>
                     <Row className="mb-3">
-                        <Col md={6}>
+                        {/*  <Col md={6}>
                             <Form.Group controlId="classType" className="mb-3">
                                 <Form.Label>Classe <span style={{ color: "red" }}>*</span></Form.Label>
                                 <Form.Select
@@ -191,16 +190,16 @@ const PassengerForm = () => {
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col md={5}>
-                            <h5 className="mt-5">Prix : <span style={{ color: 'green' }}><strong>{prixTotal} DT</strong></span></h5>
-                        </Col>
+                        <Col md={6}>
+                            <h5 className="mt-5">Prix : <strong style={{ color: 'red' }}>{prixTotal} DT</strong></h5>
+                        </Col>*/}
                     </Row>
 
-
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
 
                     <div className="text-center">
                         <Button variant="primary" type="submit">
-                            Passer au paiement{" "}
+                            Valider et Passer au paiement{" "}
                             <FaGooglePay style={{ marginLeft: '10px', height: '30px', width: '30px' }} />
                         </Button>
                     </div>
@@ -210,4 +209,4 @@ const PassengerForm = () => {
     );
 };
 
-export default PassengerForm; 
+export default PassengerForm;

@@ -12,8 +12,8 @@ const VolAjout = ({ refreshData }) => {
     idAvion: '',
     idAeroportDepart: '',
     idAeroportArrivee: '',
-    nbreReservee: '',
-    prixVol: '' // Ajout de prixVol
+    prixVol: '',
+    nbreReservee: 0, // Toujours égal à 0
   });
   const [submitting, setSubmitting] = useState(false);
   const [aeroports, setAeroports] = useState([]);
@@ -47,13 +47,42 @@ const VolAjout = ({ refreshData }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Empêcher la modification de `nbreReservee`
+    if (name === 'nbreReservee') return;
+
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const validateFormData = (data) => {
-    if (!data.numeroVol || !data.heureDepart || !data.heureArrivee || !data.statut || !data.porte || !data.idAvion || !data.typeAvion || !data.idAeroportDepart || !data.idAeroportArrivee || data.nbreReservee === undefined || !data.prixVol) {
+    if (
+      !data.numeroVol ||
+      !data.heureDepart ||
+      !data.heureArrivee ||
+      !data.statut ||
+      !data.porte ||
+      !data.typeAvion ||
+      !data.idAvion ||
+      !data.idAeroportDepart ||
+      !data.idAeroportArrivee ||
+      !data.prixVol
+    ) {
+      setError('Tous les champs sont requis.');
       return false;
     }
+
+    // Vérifier que l'heure d'arrivée est après l'heure de départ
+    if (new Date(data.heureArrivee) <= new Date(data.heureDepart)) {
+      setError('L’heure d’arrivée doit être après l’heure de départ.');
+      return false;
+    }
+
+    // Vérifier que les aéroports de départ et d'arrivée sont différents
+    if (data.idAeroportDepart === data.idAeroportArrivee) {
+      setError('Les aéroports de départ et d’arrivée doivent être différents.');
+      return false;
+    }
+
     return true;
   };
 
@@ -61,19 +90,17 @@ const VolAjout = ({ refreshData }) => {
     e.preventDefault();
     setSubmitting(true);
     setError('');
-    console.log('Form Data:', formData);
 
     if (!validateFormData(formData)) {
-      console.error('Les données du formulaire ne sont pas valides');
-      setError('Les données du formulaire ne sont pas valides');
       setSubmitting(false);
       return;
     }
 
     try {
-      console.log('Creating Vol:', formData);
-      const response = await createVol(formData);
+      const payload = { ...formData, nbreReservee: 0 }; // Assurer nbreReservee = 0
+      const response = await createVol(payload);
       console.log('API Response:', response.data);
+
       setFormData({
         numeroVol: '',
         heureDepart: '',
@@ -84,14 +111,14 @@ const VolAjout = ({ refreshData }) => {
         idAvion: '',
         idAeroportDepart: '',
         idAeroportArrivee: '',
-        nbreReservee: '',
-        prixVol: '' // Réinitialiser prixVol
+        prixVol: '',
+        nbreReservee: 0,
       });
+
       setSubmitting(false);
       refreshData();
     } catch (error) {
       console.error('Erreur lors de la soumission du formulaire', error);
-      console.log('Erreur Response:', error.response?.data); // Affichez les détails de la réponse
       setError(`Erreur lors de la soumission du formulaire : ${error.response?.data?.message || error.message}`);
       setSubmitting(false);
     }
@@ -132,7 +159,7 @@ const VolAjout = ({ refreshData }) => {
             <option value="">Sélectionnez un avion</option>
             {avions.map((avion) => (
               <option key={avion.idAvion} value={avion.idAvion}>
-                {avion.idAvion}
+                {avion.idAvion}-{avion.typeAvion}
               </option>
             ))}
           </select>
@@ -143,7 +170,7 @@ const VolAjout = ({ refreshData }) => {
             <option value="">Sélectionnez un aéroport</option>
             {aeroports.map((aeroport) => (
               <option key={aeroport.idAeroport} value={aeroport.idAeroport}>
-                {aeroport.idAeroport}
+                {aeroport.nomAeroport}
               </option>
             ))}
           </select>
@@ -154,14 +181,14 @@ const VolAjout = ({ refreshData }) => {
             <option value="">Sélectionnez un aéroport</option>
             {aeroports.map((aeroport) => (
               <option key={aeroport.idAeroport} value={aeroport.idAeroport}>
-                {aeroport.idAeroport}
+                {aeroport.nomAeroport}
               </option>
             ))}
           </select>
         </div>
         <div className="mb-3">
           <label>Nombre Réservé</label>
-          <input type="number" name="nbreReservee" className="form-control" value={formData.nbreReservee} onChange={handleInputChange} required />
+          <input type="number" name="nbreReservee" className="form-control" value={formData.nbreReservee} disabled />
         </div>
         <div className="mb-3">
           <label>Prix du Vol</label>

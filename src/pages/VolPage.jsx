@@ -25,15 +25,21 @@ const VolPage = () => {
 
   const handleDelete = async (id) => {
     setError('');
-    try {
-      const response = await deleteVol(id);
-      console.log('API Response:', response.data);
-      fetchVols();
-    } catch (error) {
-      setError('Erreur lors de la suppression');
-      console.error('Erreur lors de la suppression', error);
+    const confirmDelete = window.confirm('Êtes-vous sûr de vouloir supprimer ce vol ?');
+    if (confirmDelete) {
+      try {
+        const response = await deleteVol(id);
+        console.log('API Response:', response.data);
+        fetchVols();
+      } catch (error) {
+        setError('Erreur lors de la suppression');
+        console.error('Erreur lors de la suppression', error);
+      }
+    } else {
+      console.log('Suppression annulée');
     }
   };
+
 
   const handleEdit = (vol) => {
     setCurrentVol(vol);

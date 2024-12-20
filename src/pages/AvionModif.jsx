@@ -27,7 +27,7 @@ const AvionModif = ({ formData, setFormData, refreshData }) => {
       navigate('/dash');
     } catch (error) {
       console.error('Erreur lors de la soumission du formulaire', error);
-      console.log('Erreur Response:', error.response?.data); // Affichez les détails de la réponse
+      console.log('Erreur Response:', error.response?.data);
       setError(`Erreur lors de la soumission du formulaire : ${error.response?.data?.message || error.message}`);
       setSubmitting(false);
     }
@@ -40,7 +40,7 @@ const AvionModif = ({ formData, setFormData, refreshData }) => {
       <form onSubmit={handleFormSubmit}>
         <div className="mb-3">
           <label>ID Avion</label>
-          <input type="number" name="idAvion" className="form-control" value={formData.idAvion || ''} onChange={handleInputChange} required />
+          <input type="number" name="idAvion" className="form-control" value={formData.idAvion || ''} onChange={handleInputChange} required readOnly />
         </div>
         <div className="mb-3">
           <label>Type Avion</label>

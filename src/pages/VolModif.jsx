@@ -78,9 +78,9 @@ const VolModif = ({ formData, setFormData, refreshData }) => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleFormSubmit}>
 
-      <div className="mb-3">
+        <div className="mb-3">
           <label>ID Vol</label>
-          <input type="text" name="idVol" className="form-control" value={formData.idVol || ''} onChange={handleInputChange} required />
+          <input type="text" name="idVol" className="form-control" value={formData.idVol || ''} onChange={handleInputChange} required readOnly />
         </div>
 
         <div className="mb-3">
@@ -113,7 +113,7 @@ const VolModif = ({ formData, setFormData, refreshData }) => {
             <option value="">Sélectionnez un avion</option>
             {avions.map((avion) => (
               <option key={avion.idAvion} value={avion.idAvion}>
-                {avion.idAvion}
+                {avion.typeAvion}
               </option>
             ))}
           </select>
@@ -124,7 +124,7 @@ const VolModif = ({ formData, setFormData, refreshData }) => {
             <option value="">Sélectionnez un aéroport</option>
             {aeroports.map((aeroport) => (
               <option key={aeroport.idAeroport} value={aeroport.idAeroport}>
-                {aeroport.idAeroport}
+                {aeroport.nomAeroport}
               </option>
             ))}
           </select>
@@ -135,7 +135,7 @@ const VolModif = ({ formData, setFormData, refreshData }) => {
             <option value="">Sélectionnez un aéroport</option>
             {aeroports.map((aeroport) => (
               <option key={aeroport.idAeroport} value={aeroport.idAeroport}>
-                {aeroport.idAeroport}
+                {aeroport.nomAeroport}
               </option>
             ))}
           </select>

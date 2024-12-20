@@ -25,15 +25,21 @@ const AvionPage = () => {
 
   const handleDelete = async (id) => {
     setError('');
-    try {
-      const response = await deleteAvion(id);
-      console.log('API Response:', response.data);
-      fetchAvions();
-    } catch (error) {
-      setError('Erreur lors de la suppression');
-      console.error('Erreur lors de la suppression', error);
+    const confirmDelete = window.confirm('Êtes-vous sûr de vouloir supprimer cet avion ?');
+    if (confirmDelete) {
+      try {
+        const response = await deleteAvion(id);
+        console.log('API Response:', response.data);
+        fetchAvions();
+      } catch (error) {
+        setError('Erreur lors de la suppression');
+        console.error('Erreur lors de la suppression', error);
+      }
+    } else {
+      console.log('Suppression annulée');
     }
   };
+
 
   const handleEdit = (avion) => {
     setCurrentAvion(avion);

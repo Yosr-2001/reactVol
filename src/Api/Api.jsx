@@ -64,7 +64,10 @@ export const createVol = (vol) => {
 //   console.log('Update Vol:', id, vol);
 //   return api.put(`/Vol/${id}`, vol);
 // };
-
+export const createReservation = (reservation) => {
+  console.log('Create Reservation:', reservation);
+  return api.post('/Reservation', reservation);
+};
 export const updateVol = async (id, vol) => {
   try {
     const response = await fetch(`http://localhost:5235/api/Vol`, {
@@ -101,6 +104,21 @@ export const deleteVol = (id) => {
   console.log('Delete Vol:', id);
   return api.delete(`/Vol/${id}`);
 };
+// export const deleteVol = (id) => {
+//   console.log('Delete Vol:', id);
+//   return fetch(`/Vol/{id}`, {
+//     method: 'DELETE',
+//   })
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//       }
+//       return response.json(); 
+//     })
+//     .catch(error => {
+//       console.error('There was a problem with the fetch operation:', error);
+//     });
+// };
 
 export const createAeroport = (aeroport) => {
   console.log('Create Aeroport:', aeroport);
@@ -147,7 +165,7 @@ export const deleteAeroport = (id) => {
 };
 
 //export const getVols = () => api.get('/Vol'); 
-export const getOffres = () => api.get('/Offre'); 
+export const getOffres = () => api.get('/Offre');
 //export const createOffre = (offre) => api.post('/Offre', offre); 
 // export const createOffre = (offre) => {
 //   console.log('Create offre:', offre);
@@ -173,8 +191,8 @@ export const createOffre = async (offre) => {
       body: JSON.stringify({
         nomOffre: offre.nomOffre,
         pourcentageReduction: parseFloat(offre.pourcentageReduction),
-        idVol: parseInt(offre.idVol, 10), // ID du vol
-        vol: offre.vol, // Objet complet du vol
+        idVol: parseInt(offre.idVol, 10),
+        vol: offre.vol,
       }),
     });
 
@@ -197,5 +215,5 @@ export const createOffre = async (offre) => {
 
 
 export const getOffresPourVol = (volId) => api.get(`/Offre/${volId}`);
-export const updateOffre = (id, offre) => api.put(`/Offre/${id}`, offre); 
+export const updateOffre = (id, offre) => api.put(`/Offre/${id}`, offre);
 export const deleteOffre = (id) => api.delete(`/Offre/${id}`);

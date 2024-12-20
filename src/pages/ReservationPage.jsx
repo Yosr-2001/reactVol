@@ -24,7 +24,7 @@ const ReservationPage = ({ data }) => {
               <td>{reservation.idVol}</td>
               <td>{reservation.dateReservation}</td>
               <td>{reservation.statutReservation}</td>
-              <td>{reservation.prixReservation}</td>
+              <td>{reservation.prixReservationTotal}</td>
             </tr>
           ))}
         </tbody>

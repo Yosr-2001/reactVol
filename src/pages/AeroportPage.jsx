@@ -25,15 +25,21 @@ const AeroportPage = () => {
 
   const handleDelete = async (id) => {
     setError('');
-    try {
-      const response = await deleteAeroport(id);
-      console.log('API Response:', response.data);
-      fetchAeroports();
-    } catch (error) {
-      setError('Erreur lors de la suppression');
-      console.error('Erreur lors de la suppression', error);
+    const confirmDelete = window.confirm('Êtes-vous sûr de vouloir supprimer cet aéroport ?');
+    if (confirmDelete) {
+      try {
+        const response = await deleteAeroport(id);
+        console.log('API Response:', response.data);
+        fetchAeroports();
+      } catch (error) {
+        setError('Erreur lors de la suppression');
+        console.error('Erreur lors de la suppression', error);
+      }
+    } else {
+      console.log('Suppression annulée');
     }
   };
+
 
   const handleEdit = (aeroport) => {
     setCurrentAeroport(aeroport);

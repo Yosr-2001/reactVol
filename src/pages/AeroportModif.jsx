@@ -39,7 +39,7 @@ const AeroportModif = ({ formData, setFormData, refreshData }) => {
 
       <div className="mb-3">
           <label>ID Aeroport</label>
-          <input type="number" name="idAeroport" className="form-control" value={formData.idAeroport || ''} onChange={handleInputChange} required />
+          <input type="number" name="idAeroport" className="form-control" value={formData.idAeroport || ''} onChange={handleInputChange} required  readOnly/>
         </div>
         
         <div className="mb-3">
