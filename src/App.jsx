@@ -28,99 +28,6 @@ import axios from "axios";
 import { useEffect, useState } from 'react'
 
 function App() {
-  //test avion
-  // const [newAvion, setNewAvion] = useState({
-  //   TypeAvion: "",
-  //   CapaciteAvion: "",
-  //   FabriquantAvion: "",
-  // });
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setNewAvion({ ...newAvion, [name]: value });
-  // };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   axios.post("http://127.0.0.1:5235/api/avions", newAvion)
-  //     .then(response => {
-  //       alert("Avion added successfully!");
-  //       console.log(newAvion);
-  //       setNewAvion({ TypeAvion: "", CapaciteAvion: "", FabriquantAvion: "" }); // Reset form
-  //     })
-  //     .catch(error => {
-  //       console.error("Error adding avion:", error);
-  //     });
-  // };
-
-  // return (
-  //   <div>
-  //     <h2>Add New Avion</h2>
-  //     <form onSubmit={handleSubmit}>
-  //       <label>
-  //         Type of Avion:
-  //         <input
-  //           type="text"
-  //           name="TypeAvion"
-  //           value={newAvion.TypeAvion}
-  //           onChange={handleInputChange}
-  //           required
-  //         />
-  //       </label>
-  //       <br />
-  //       <label>
-  //         Capacity:
-  //         <input
-  //           type="number"
-  //           name="CapaciteAvion"
-  //           value={newAvion.CapaciteAvion}
-  //           onChange={handleInputChange}
-  //           required
-  //         />
-  //       </label>
-  //       <br />
-  //       <label>
-  //         Manufacturer:
-  //         <input
-  //           type="text"
-  //           name="FabriquantAvion"
-  //           value={newAvion.FabriquantAvion}
-  //           onChange={handleInputChange}
-  //         />
-  //       </label>
-  //       <br />
-  //       <button type="submit">Add Avion</button>
-  //     </form>
-  //   </div>
-  // );
-  /////test avion
-  // const [avions, setAvions] = useState([]);
-
-  // useEffect(() => {
-  //   // Fetching avion data from Laravel API
-  //   axios.get("http://127.0.0.1:5235/api/avions")
-  //     .then(response => {
-  //       setAvions(response.data); // Assuming the API returns the avion data
-  //     })
-  //     .catch(error => {
-  //       console.error("Error fetching avion data:", error);
-  //     });
-  // }, []);
-
-  // return (
-  //   <div className="App">
-  //     <h1>List of Avions</h1>
-  //     <ul>
-  //       {avions.map(avion => (
-  //         <li key={avion.id}>
-  //           <strong>{avion.type_avion}</strong>
-  //           <p>Capacity: {avion.capacite_avion}</p>
-  //           <p>Manufacturer: {avion.fabriquant_avion || "Unknown"}</p>
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   </div>
-  // );
 
   return (
     <>
@@ -179,13 +86,7 @@ function App() {
             >
               <Route index element={<AvionForm />} />
             </Route>
-
-
-
-
-
-
-          </Routes>
+  </Routes>
 
         </Router>
       </div>
