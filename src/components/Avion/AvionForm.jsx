@@ -1,24 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Col, Row } from "react-bootstrap";
 import { FaPlane } from "react-icons/fa";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import "../../assets/style/avion.scss";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from 'react'
-import { apiRequest } from "../../utils/api";
+import { apiRequest } from "../../utils/api"; // Make sure this is properly defined
 
 function AvionForm() {
   const navigate = useNavigate();
 
-
   useEffect(() => {
-    const token = sessionStorage.getItem('jwttoken');
-    if (!token) {
-      navigate('/sign-in'); //ken token not found wla expiré
-    }
-  }, [navigate]);
-
+    Aos.init();
+    // const token = sessionStorage.getItem("jwttoken");
+    // if (!token) {
+    //   navigate("/sign-in");
+    // }
+  },
+    // [navigate]
+  );
 
   const [formData, setFormData] = useState({
     typeAvion: "",
@@ -35,10 +35,15 @@ function AvionForm() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.typeAvion) newErrors.typeAvion = "Type of airplane is required.";
-    if (!formData.capaciteAvion || isNaN(formData.capaciteAvion))
+    if (!formData.typeAvion) {
+      newErrors.typeAvion = "Type of airplane is required.";
+    }
+    if (!formData.capaciteAvion || isNaN(formData.capaciteAvion)) {
       newErrors.capaciteAvion = "Capacity must be a valid number.";
-    if (!formData.fabriquantAvion) newErrors.fabriquantAvion = "Manufacturer is required.";
+    }
+    if (!formData.fabriquantAvion) {
+      newErrors.fabriquantAvion = "Manufacturer is required.";
+    }
     return newErrors;
   };
 
@@ -52,22 +57,23 @@ function AvionForm() {
     }
 
     const newAvion = {
-      typeAvion: formData.typeAvion,
-      capaciteAvion: parseInt(formData.capaciteAvion, 10),
-      fabriquantAvion: formData.fabriquantAvion,
+      TypeAvion: formData.typeAvion,
+      CapaciteAvion: parseInt(formData.capaciteAvion, 10),
+      FabriquantAvion: formData.fabriquantAvion,
     };
 
     try {
-      const response = await apiRequest('http://localhost:5235/api/Avion', 'POST', newAvion);
-      console.log('Avion added successfully:', response);
-      setFormData({ typeAvion: '', capaciteAvion: '', fabriquantAvion: '' });
+      const response = await apiRequest("/avions", "POST", newAvion);
+      console.log("Avion added successfully:", response);
+      setFormData({ typeAvion: "", capaciteAvion: "", fabriquantAvion: "" });
       setErrors({});
+      alert("Avion created successfully!");
+      navigate("/"); // Redirect to home or another page
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
       setErrors({ server: error.message });
     }
   };
-
 
   return (
     <div className="avion-form-container" data-aos="fade-up">
@@ -136,6 +142,9 @@ function AvionForm() {
         <Button variant="primary" type="submit" className="submit-btn">
           Create Airplane
         </Button>
+        {errors.server && (
+          <p className="text-danger mt-3">Error: {errors.server}</p>
+        )}
       </Form>
     </div>
   );

@@ -17,7 +17,22 @@ const Dashboard = () => {
   const [avions, setAvions] = useState([]);
 
 
-  useEffect(() => { const fetchAeroports = async () => { try { const response = await axios.get('http://localhost:5235/api/Aeroport'); setAeroports(response.data); } catch (error) { console.error("Erreur lors de la récupération des aéroports", error); } }; const fetchAvions = async () => { try { const response = await axios.get('http://localhost:5235/api/Avion'); setAvions(response.data); } catch (error) { console.error("Erreur lors de la récupération des avions", error); } }; fetchAeroports(); fetchAvions(); }, []);
+
+
+
+  useEffect(() => {
+    const fetchAeroports = async () => {
+      try {
+        const response = await axios.get('http://localhost:5235/api/Aeroport'); setAeroports(response.data);
+      } catch (error) { console.error("Erreur lors de la récupération des aéroports", error); }
+    }; const fetchAvions = async () => {
+      try {
+        const response = await axios.get('http://localhost:5235/api/Avion');
+        setAvions(response.data);
+      } catch (error) { console.error("Erreur lors de la récupération des avions", error); }
+    }; fetchAeroports(); fetchAvions();
+  },
+    []);
 
 
 
@@ -27,18 +42,15 @@ const Dashboard = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Erreur lors du chargement des données');
-      }
-      const result = await response.json();
-      setData(result);
+      const response = await axios.get(url);   
+      setData(response.data);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleMenuClick = (section, url) => {
     setActiveSection(section);
@@ -134,7 +146,7 @@ const Dashboard = () => {
     }
     setShowForm(true);
     setFormData({});
-    setEditingId(null); // Reset editing ID when creating a new entry
+    setEditingId(null);  
   };
 
   const handleFormSubmit = async (e) => {

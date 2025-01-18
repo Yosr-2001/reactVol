@@ -1,219 +1,58 @@
-// src/api/api.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5235/api';
+// Set the base URL for your Laravel API
+const API_BASE_URL = 'http://localhost:8000/api';
 
+// Create an Axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
 });
 
-export const getAvions = () => api.get('/Avion');
-export const getAeroports = () => api.get('/Aeroport');
-export const getVols = () => api.get('/Vol');
-export const getReservations = () => api.get('/Reservation');
-export const getPassagers = () => api.get('/Passager');
+/**
+ * AVIONS
+ */
+export const getAvions = () => api.get('/avions');
+export const createAvion = (avion) => api.post('/avions', avion);
+export const updateAvion = (id, avion) => api.put(`/avions/${id}`, avion);
+export const deleteAvion = (id) => api.delete(`/avions/${id}`);
 
-export const createAvion = (avion) => {
-  console.log('Create Avion:', avion);
-  return api.post('/Avion', avion);
-};
-// export const updateAvion = (id, avion) => {
-//   console.log('Update Avion:', id, avion);
-//   return api.put(`/Avion/${id}`, avion);
-// };
-export const updateAvion = async (avion) => {
-  try {
-    const response = await fetch(`http://localhost:5235/api/Avion`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(avion),
-    });
+/**
+ * AEROPORTS
+ */
+export const getAeroports = () => api.get('/aeroports');
+export const createAeroport = (aeroport) => api.post('/aeroports', aeroport);
+export const updateAeroport = (id, aeroport) => api.put(`/aeroports/${id}`, aeroport);
+export const deleteAeroport = (id) => api.delete(`/aeroports/${id}`);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+/**
+ * VOLS
+ */
+export const getVols = () => api.get('/vols');
+export const createVol = (vol) => api.post('/vols', vol);
+export const updateVol = (id, vol) => api.put(`/vols/${id}`, vol);
+export const deleteVol = (id) => api.delete(`/vols/${id}`);
 
-    const contentType = response.headers.get('Content-Type');
-    let data;
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      data = await response.text();
-    }
+/**
+ * RESERVATIONS
+ */
+export const getReservations = () => api.get('/reservations');
+export const createReservation = (reservation) => api.post('/reservations', reservation);
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
+/**
+ * PASSAGERS
+ */
+export const getPassagers = () => api.get('/passagers');
 
-export const deleteAvion = (id) => {
-  console.log('Delete Avion:', id);
-  return api.delete(`/Avion/${id}`);
-};
+/**
+ * OFFRES
+ */
+export const getOffres = () => api.get('/offres');
+export const getOffresPourVol = (volId) => api.get(`/offres/${volId}`);
+export const createOffre = (offre) => api.post('/offres', offre);
+export const updateOffre = (id, offre) => api.put(`/offres/${id}`, offre);
+export const deleteOffre = (id) => api.delete(`/offres/${id}`);
 
-// src/api/api.js
-export const createVol = (vol) => {
-  console.log('Create Vol:', vol);
-  return api.post('/Vol', vol);
-};
-
-// export const updateVol = (id, vol) => {
-//   console.log('Update Vol:', id, vol);
-//   return api.put(`/Vol/${id}`, vol);
-// };
-export const createReservation = (reservation) => {
-  console.log('Create Reservation:', reservation);
-  return api.post('/Reservation', reservation);
-};
-export const updateVol = async (id, vol) => {
-  try {
-    const response = await fetch(`http://localhost:5235/api/Vol`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(vol),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const contentType = response.headers.get('Content-Type');
-    let data;
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      data = await response.text();
-    }
-
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-
-
-
-
-export const deleteVol = (id) => {
-  console.log('Delete Vol:', id);
-  return api.delete(`/Vol/${id}`);
-};
-// export const deleteVol = (id) => {
-//   console.log('Delete Vol:', id);
-//   return fetch(`/Vol/{id}`, {
-//     method: 'DELETE',
-//   })
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.json(); 
-//     })
-//     .catch(error => {
-//       console.error('There was a problem with the fetch operation:', error);
-//     });
-// };
-
-export const createAeroport = (aeroport) => {
-  console.log('Create Aeroport:', aeroport);
-  return api.post('/Aeroport', aeroport);
-};
-// export const updateAeroport = (id, aeroport) => {
-//   console.log('Update Aeroport:', id, aeroport);
-//   return api.put(`/Aeroport/${id}`, aeroport);
-// };
-
-export const updateAeroport = async (id, aeroport) => {
-  try {
-    const response = await fetch(`http://localhost:5235/api/Aeroport`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(aeroport),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const contentType = response.headers.get('Content-Type');
-    let data;
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      data = await response.text();
-    }
-
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-
-
-export const deleteAeroport = (id) => {
-  console.log('Delete Aeroport:', id);
-  return api.delete(`/Aeroport/${id}`);
-};
-
-//export const getVols = () => api.get('/Vol'); 
-export const getOffres = () => api.get('/Offre');
-//export const createOffre = (offre) => api.post('/Offre', offre); 
-// export const createOffre = (offre) => {
-//   console.log('Create offre:', offre);
-//   return api.post('/Offre', offre);
-// };
-// export const createOffre = (offre) => {
-//   console.log('Create offre:', offre);
-//   return api.post('/Offre', {
-//     nomOffre: offre.nomOffre,
-//     pourcentageReduction: parseFloat(offre.pourcentageReduction),
-//     idVol: offre.idVol
-//   });
-// };
-
-export const createOffre = async (offre) => {
-  console.log('Create offre:', offre);
-  try {
-    const response = await fetch('http://localhost:5235/api/Offre', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        nomOffre: offre.nomOffre,
-        pourcentageReduction: parseFloat(offre.pourcentageReduction),
-        idVol: parseInt(offre.idVol, 10),
-        vol: offre.vol,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Response error text:', errorText);
-      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-    }
-
-    const contentType = response.headers.get('Content-Type');
-    return contentType && contentType.includes('application/json')
-      ? await response.json()
-      : await response.text();
-  } catch (error) {
-    console.error('Error in createOffre:', error);
-    throw error;
-  }
-};
-
-
-
-export const getOffresPourVol = (volId) => api.get(`/Offre/${volId}`);
-export const updateOffre = (id, offre) => api.put(`/Offre/${id}`, offre);
-export const deleteOffre = (id) => api.delete(`/Offre/${id}`);

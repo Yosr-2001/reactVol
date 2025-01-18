@@ -38,8 +38,8 @@ const Navbar = () => {
           <Nav.Link className="listItem" as={Link} to="/home">Home</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/search">Search</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/about">About</Nav.Link>
-          <Nav.Link className="listItem" as={Link} to="/offre">Offres</Nav.Link>
-          <Nav.Link className="listItem" as={Link} to="/reservations">Reservations</Nav.Link>
+          {/* <Nav.Link className="listItem" as={Link} to="/offre">Offres</Nav.Link>
+        */ } <Nav.Link className="listItem" as={Link} to="/reservations">Reservations</Nav.Link>
           <Nav.Link className="listItem" as={Link} to="/vols">Explorer</Nav.Link>
 
           <button className="logoutButton" onClick={handleLogout}>

@@ -19,51 +19,61 @@ const PassengerForm = () => {
         dateNaissance: "",
         telephonePassager: "",
         numeroPasseport: "",
-        classType: "Economy"
+        classType: "Economy",
     });
 
+    // Update form data on user input
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
+    // Calculate total price based on class and number of passengers
     const calculPrixReservationTotal = (prixVolBrut, classType, nbPassagers = 1) => {
         const multiplier = classType === "Business" ? 2.0 : classType === "Premium" ? 1.5 : 1.0;
         return prixVolBrut * multiplier * nbPassagers;
     };
 
+    // Update total price when class type or flight price changes
     useEffect(() => {
-        const total = calculPrixReservationTotal(flight.prixVol, formData.classType, 1);
-        setPrixTotal(total);
+        if (flight?.prixVol) {
+            const total = calculPrixReservationTotal(flight.prixVol, formData.classType, 1);
+            setPrixTotal(total);
+        }
     }, [formData.classType, flight.prixVol]);
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
 
+        // Validate passport format
         const passportRegex = /^[A-Z]{1}[0-9]{8}$/;
-
         if (!passportRegex.test(formData.numeroPasseport)) {
             setError("Le numéro de passeport doit commencer par une lettre majuscule suivie de 8 chiffres (ex: E12345678).");
             return;
         }
 
+        // Prepare request body
         const body = {
-            nomPassager: formData.nomPassager,
-            prenomPassager: formData.prenomPassager,
-            emailPassager: formData.emailPassager,
-            dateNaissance: formData.dateNaissance,
-            telephonePassager: formData.telephonePassager,
-            numeroPasseport: formData.numeroPasseport,
+            NomPassager: formData.nomPassager,
+            PrenomPassager: formData.prenomPassager,
+            EmailPassager: formData.emailPassager,
+            DateNaissance: formData.dateNaissance,
+            TelephonePassager: formData.telephonePassager,
+            NumeroPasseport: formData.numeroPasseport,
         };
 
         try {
-            const response = await apiRequest("http://localhost:5235/api/Passager", 'POST', body);
-            const idPassager = response.idPassager; // Assuming the response contains the idPassager
-            console.log("Passager ===> ", response);
+            // Send passenger data to API
+            const response = await apiRequest("http://localhost:5235/api/passagers", "POST", body);
+            const idPassager = response.idPassager; // Assuming the API response includes idPassager
+            console.log("Passager saved:", response);
+
+            // Navigate to payment page with necessary data
             navigate("/paiement", { state: { prixTotal, formData, idPassager, idVol: flight.idVol } });
-        } catch (error) {
-            console.error("Error submitting form:", error);
+        } catch (err) {
+            console.error("Error submitting form:", err);
             setError("Il y a eu un problème lors de la réservation.");
         }
     };
@@ -76,10 +86,11 @@ const PassengerForm = () => {
                     Vol sélectionné : <strong>{flight.aeroportDepart?.villeAeroport} → {flight.aeroportArrivee?.villeAeroport}</strong>
                 </h2>
                 <Form onSubmit={handleSubmit}>
+                    {/* Passenger Information */}
                     <Row className="mb-3">
                         <Col md={6}>
                             <Form.Group controlId="nomPassager" className="mb-3">
-                                <Form.Label>Nom <span style={{ color: 'red' }}>*</span></Form.Label>
+                                <Form.Label>Nom <span style={{ color: "red" }}>*</span></Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="nomPassager"
@@ -95,7 +106,7 @@ const PassengerForm = () => {
                         </Col>
                         <Col md={6}>
                             <Form.Group controlId="prenomPassager" className="mb-3">
-                                <Form.Label>Prénom <span style={{ color: 'red' }}>*</span></Form.Label>
+                                <Form.Label>Prénom <span style={{ color: "red" }}>*</span></Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="prenomPassager"
@@ -111,24 +122,24 @@ const PassengerForm = () => {
                         </Col>
                     </Row>
 
+                    {/* Contact Details */}
                     <Row className="mb-3">
                         <Col md={6}>
                             <Form.Group controlId="emailPassager" className="mb-3">
-                                <Form.Label>Email <span style={{ color: 'red' }}>*</span></Form.Label>
+                                <Form.Label>Email <span style={{ color: "red" }}>*</span></Form.Label>
                                 <Form.Control
                                     type="email"
                                     name="emailPassager"
                                     value={formData.emailPassager}
                                     onChange={handleChange}
                                     required
-                                    title="L'email doit être sous la forme : exemple@exple.com"
                                     placeholder="Exemple: exemple@exple.com"
                                 />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
                             <Form.Group controlId="dateNaissance" className="mb-3">
-                                <Form.Label>Date de Naissance <span style={{ color: 'red' }}>*</span></Form.Label>
+                                <Form.Label>Date de Naissance <span style={{ color: "red" }}>*</span></Form.Label>
                                 <Form.Control
                                     type="date"
                                     name="dateNaissance"
@@ -136,16 +147,16 @@ const PassengerForm = () => {
                                     onChange={handleChange}
                                     required
                                     max={new Date().toISOString().split("T")[0]}
-                                    title="Veuillez entrer une date de naissance valide."
                                 />
                             </Form.Group>
                         </Col>
                     </Row>
 
+                    {/* Phone and Passport */}
                     <Row className="mb-3">
                         <Col md={6}>
                             <Form.Group controlId="telephonePassager" className="mb-3">
-                                <Form.Label>Téléphone <span style={{ color: 'red' }}>*</span></Form.Label>
+                                <Form.Label>Téléphone <span style={{ color: "red" }}>*</span></Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="telephonePassager"
@@ -153,54 +164,34 @@ const PassengerForm = () => {
                                     onChange={handleChange}
                                     required
                                     pattern="^[0-9]{8}$"
-                                    title="Le numéro de téléphone doit être composé exactement de 8 chiffres."
                                     placeholder="Exemple: 12345678"
                                 />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
                             <Form.Group controlId="numeroPasseport" className="mb-3">
-                                <Form.Label>Numéro de Passeport <span style={{ color: 'red' }}>*</span></Form.Label>
+                                <Form.Label>Numéro de Passeport <span style={{ color: "red" }}>*</span></Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="numeroPasseport"
                                     value={formData.numeroPasseport}
                                     onChange={handleChange}
+                                    required
                                     placeholder="Ex: E12345678"
                                     pattern="^[A-Z]{1}[0-9]{8}$"
-                                    title="Le numéro de passeport doit commencer par une lettre majuscule suivie de 8 chiffres (ex: E12345678)."
-                                    required
                                 />
                             </Form.Group>
                         </Col>
                     </Row>
-                    <Row className="mb-3">
-                        {/*  <Col md={6}>
-                            <Form.Group controlId="classType" className="mb-3">
-                                <Form.Label>Classe <span style={{ color: "red" }}>*</span></Form.Label>
-                                <Form.Select
-                                    name="classType"
-                                    value={formData.classType}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="Economy">Economy</option>
-                                    <option value="Premium">Premium</option>
-                                    <option value="Business">Business</option>
-                                </Form.Select>
-                            </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                            <h5 className="mt-5">Prix : <strong style={{ color: 'red' }}>{prixTotal} DT</strong></h5>
-                        </Col>*/}
-                    </Row>
 
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    {/* Error Message */}
+                    {error && <p style={{ color: "red" }}>{error}</p>}
 
+                    {/* Submit Button */}
                     <div className="text-center">
                         <Button variant="primary" type="submit">
                             Valider et Passer au paiement{" "}
-                            <FaGooglePay style={{ marginLeft: '10px', height: '30px', width: '30px' }} />
+                            <FaGooglePay style={{ marginLeft: "10px", height: "30px", width: "30px" }} />
                         </Button>
                     </div>
                 </Form>
