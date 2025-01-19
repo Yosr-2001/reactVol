@@ -1,70 +1,68 @@
 import React, { useEffect, useState } from "react";
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { FaPlane, FaAirbnb, FaBuilding, FaUser, FaTicketAlt } from 'react-icons/fa';
-import './Dashboard.css';
+import { Container, Button, Table, Modal, Form, Toast, ToastContainer } from "react-bootstrap";
 import axios from "axios";
+import { FaPlane, FaBuilding, FaAirbnb, FaUser, FaTicketAlt, FaEdit, FaTrashAlt } from "react-icons/fa";
+import './Dashboard.css';
 
 const Dashboard = () => {
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState('planes');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [editingId, setEditingId] = useState(null); // To track the ID of the item being edited
-  const [aeroports, setAeroports] = useState([]);
-  const [avions, setAvions] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('success');  // success or error
 
-
-
-
+  const API_BASE_URL = "http://127.0.0.1:8000/api";
 
   useEffect(() => {
-    const fetchAeroports = async () => {
+    const fetchData = async (url) => {
+      setLoading(true);
+      setError(null);
       try {
-        const response = await axios.get('http://localhost:5235/api/Aeroport'); setAeroports(response.data);
-      } catch (error) { console.error("Erreur lors de la récupération des aéroports", error); }
-    }; const fetchAvions = async () => {
-      try {
-        const response = await axios.get('http://localhost:5235/api/Avion');
-        setAvions(response.data);
-      } catch (error) { console.error("Erreur lors de la récupération des avions", error); }
-    }; fetchAeroports(); fetchAvions();
-  },
-    []);
+        const response = await axios.get(url);
+        setData(response.data);
+        console.log(response.data)
+      } catch (err) {
+        setError('Erreur lors du chargement des données');
+      } finally {
+        setLoading(false);
+      }
 
+    };
 
-
-
-
-  const fetchData = async (url) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(url);   
-      setData(response.data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    switch (activeSection) {
+      case "planes":
+        fetchData(`${API_BASE_URL}/avions`);
+        break;
+      case "airports":
+        fetchData(`${API_BASE_URL}/aeroports`);
+        break;
+      case "flights":
+        fetchData(`${API_BASE_URL}/vols`);
+        break;
+      case "passengers":
+        fetchData(`${API_BASE_URL}/passagers`);
+        break;
+      case "reservations":
+        fetchData(`${API_BASE_URL}/reservations`);
+        console.log("res here")
+        break;
+      default:
+        break;
     }
-  };
+  }, [activeSection]);
 
-
-  const handleMenuClick = (section, url) => {
+  const handleMenuClick = (section) => {
     setActiveSection(section);
-    fetchData(url);
     setShowForm(false);
-    setEditingId(null); // Reset editing ID when changing sections
+    setEditingId(null);
   };
 
   const handleDelete = async (id) => {
-    if (activeSection === 'passengers' || activeSection === 'reservations') {
-      alert("Suppression désactivée pour cette section.");
-      return;
-    }
-
     const confirmDelete = window.confirm("Êtes-vous sûr de vouloir supprimer cet élément ?");
     if (!confirmDelete) return;
 
@@ -73,137 +71,93 @@ const Dashboard = () => {
       let url = '';
       switch (activeSection) {
         case 'planes':
-          url = `http://localhost:5235/api/Avion/${id}`;
+          url = `${API_BASE_URL}/avions/${id}`;
           break;
         case 'airports':
-          url = `http://localhost:5235/api/Aeroport/${id}`;
+          url = `${API_BASE_URL}/aeroports/${id}`;
           break;
         case 'flights':
-          url = `http://localhost:5235/api/Vol/${id}`;
+          url = `${API_BASE_URL}/vols/${id}`;
+          break;
+        case 'passengers':
+          url = `${API_BASE_URL}/passagers/${id}`;
           break;
         case 'reservations':
-          alert("Suppression désactivée pour les réservations.");
-          return;
+          url = `${API_BASE_URL}/reservations/${id}`;
+          break;
         default:
-          throw new Error('Section non prise en charge');
+          alert("Section non prise en charge");
+          return;
       }
 
-      const response = await fetch(url, { method: 'DELETE' });
-      if (!response.ok) {
-        throw new Error('Erreur lors de la suppression');
-      }
-
-      alert('Suppression effectuée avec succès');
-      handleMenuClick(activeSection, `http://localhost:5235/api/${activeSection}`);
-    } catch (err) {
-      alert(`Erreur : ${err.message}`);
+      await axios.delete(url);
+      setToastMessage("Suppression effectuée avec succès !");
+      setToastType('success');
+      handleMenuClick(activeSection);
+    } catch (error) {
+      setToastMessage("Erreur lors de la suppression.");
+      setToastType('error');
     } finally {
       setLoading(false);
     }
   };
 
   const handleEdit = async (id) => {
-    if (activeSection === 'passengers' || activeSection === 'reservations') {
-      alert("Modification désactivée pour cette section.");
-      return;
-    }
-
     setEditingId(id);
     setShowForm(true);
-    setFormData({}); // Clear form data before fetching
-
     try {
       let url = '';
       switch (activeSection) {
         case 'planes':
-          url = `http://localhost:5235/api/Avion/${id}`;
+          url = `${API_BASE_URL}/avions/${id}`;
           break;
         case 'airports':
-          url = `http://localhost:5235/api/Aeroport/${id}`;
+          url = `${API_BASE_URL}/aeroports/${id}`;
           break;
         case 'flights':
-          url = `http://localhost:5235/api/Vol/${id}`;
+          url = `${API_BASE_URL}/vols/${id}`;
+          break;
+        case 'passengers':
+          url = `${API_BASE_URL}/passagers/${id}`;
+          break;
+        case 'reservations':
+          url = `${API_BASE_URL}/reservations/${id}`;
           break;
         default:
           throw new Error('Section non prise en charge pour la modification');
       }
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des données pour modification');
-      }
-      const result = await response.json();
-      setFormData(result); // Populate form with the fetched data
-    } catch (err) {
-      alert(`Erreur : ${err.message}`);
+      const response = await axios.get(url);
+      setFormData(response.data);
+    } catch (error) {
+      alert("Erreur lors de la récupération des données.");
     }
   };
-
-  const handleNew = () => {
-    if (activeSection === 'passengers' || activeSection === 'reservations') {
-      alert("Ajout désactivé pour cette section.");
-      return;
-    }
-    setShowForm(true);
-    setFormData({});
-    setEditingId(null);  
-  };
-
   const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      let url = '';
-      let method = 'POST'; // Default to POST for new entries
-      if (editingId) {
-        method = 'PUT'; // Change to PUT for editing
-        switch (activeSection) {
-          case 'planes':
-            url = `http://localhost:5235/api/Avion/${editingId}`;
-            break;
-          case 'airports':
-            url = `http://localhost:5235/api/Aeroport/${editingId}`;
-            break;
-          case 'flights':
-            url = `http://localhost:5235/api/Vol/${editingId}`;
-            break;
-          default:
-            throw new Error('Modification non prise en charge pour cette section');
-        }
-      } else {
-        switch (activeSection) {
-          case 'planes':
-            url = 'http://localhost:5235/api/Avion';
-            break;
-          case 'airports':
-            url = 'http://localhost:5235/api/Aeroport';
-            break;
-          case 'flights':
-            url = 'http://localhost:5235/api/Vol';
-            break;
-          case 'reservations':
-            url = 'http://localhost:5235/api/Reservation';
-            break;
-          default:
-            throw new Error('Ajout non pris en charge pour cette section');
-        }
-      }
+    e.preventDefault(); // Empêcher le rechargement de la page
+    setSubmitting(true); // Empêcher l'envoi de plusieurs fois
 
-      const response = await fetch(url, {
-        method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+    try {
+      const url = activeSection === 'planes' ? `${API_BASE_URL}/avions` :
+        activeSection === 'airports' ? `${API_BASE_URL}/aeroports` :
+          activeSection === 'flights' ? `${API_BASE_URL}/vols` :
+            activeSection === 'passengers' ? `${API_BASE_URL}/passagers` :
+              activeSection === 'reservations' ? `${API_BASE_URL}/reservations` :
+                '';
+
+      const method = editingId ? 'PUT' : 'POST'; // Vérifier si c'est une mise à jour ou un ajout
+      const response = await axios({
+        method,
+        url: editingId ? `${url}/${editingId}` : url, // Si en mode édition, ajouter l'ID
+        data: formData // Envoyer les données du formulaire
       });
 
-      if (!response.ok) {
-        throw new Error('Erreur lors de l\'ajout ou de la modification');
-      }
-
-      alert(editingId ? 'Modification effectuée avec succès' : 'Ajout effectué avec succès');
-      setShowForm(false);
-      handleMenuClick(activeSection, url);
-    } catch (err) {
-      alert(`Erreur : ${err.message}`);
+      setToastMessage(editingId ? "Modification effectuée avec succès" : "Ajout effectué avec succès");
+      setToastType('success');
+      setShowForm(false); // Fermer le formulaire
+      handleMenuClick(activeSection); // Rafraîchir les données après modification
+    } catch (error) {
+      setToastMessage("Erreur lors de l'ajout ou de la modification.");
+      setToastType('error');
     } finally {
       setSubmitting(false);
     }
@@ -211,296 +165,333 @@ const Dashboard = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const renderForm = () => {
+    console.log("Form data:", formData); // Vérifier si formData contient des données
     switch (activeSection) {
-      case 'planes':
-        return (
-          <form onSubmit={handleFormSubmit}>
-            <div className="mb-3">
-              <label>Type d'avion</label>
-              <input type="text" name="typeAvion" className="form-control" value={formData.typeAvion || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Capacité</label>
-              <input type="number" name="capaciteAvion" className="form-control" value={formData.capaciteAvion || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Fabriquant</label>
-              <input type="text" name="fabriquantAvion" className="form-control" value={formData.fabriquantAvion || ''} onChange={handleInputChange} required />
-            </div>
-            <button type="submit" className="btn btn-primary" disabled={submitting}>
-              {submitting ? 'Ajout en cours...' : editingId ? 'Modifier' : 'Ajouter'}
-            </button>
-          </form>
-        );
       case 'reservations':
         return (
-          <form onSubmit={handleFormSubmit}>
-            <div className="mb-3">
-              <label>ID Passager</label>
-              <input type="number" name="idPassager" className="form-control" value={formData.idPassager || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>ID Vol</label>
-              <input type="number" name="idVol" className="form-control" value={formData.idVol || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Date de Réservation</label>
-              <input type="date" name="dateReservation" className="form-control" value={formData.dateReservation || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Statut</label>
-              <input type="text" name="statutReservation" className="form-control" value={formData.statutReservation || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Prix</label>
-              <input type="number" name="prixReservation" className="form-control" value={formData.prixReservation || ''} onChange={handleInputChange} required />
-            </div>
-            <button type="submit" className="btn btn-primary" disabled={submitting}>
-              {submitting ? 'Ajout en cours...' : editingId ? 'Modifier' : 'Ajouter'}
-            </button>
-          </form>
+          <Form onSubmit={handleFormSubmit}>
+            {/* Champs de saisie du formulaire */}
+            <Form.Group className="mb-3">
+              <Form.Label>ID Passager</Form.Label>
+              <Form.Control
+                type="number"
+                name="id_passager"
+                value={formData.id_passager || ''} // Vérifier si les données existent
+                onChange={handleInputChange} // Mettre à jour formData
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>ID Vol</Form.Label>
+              <Form.Control
+                type="number"
+                name="vol"
+                value={formData.vol || ''} // Vérifier si les données existent
+                onChange={handleInputChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Statut de la réservation</Form.Label>
+              <Form.Control
+                type="text"
+                name="statut_reservation"
+                value={formData.statut_reservation || ''} // Vérifier si les données existent
+                onChange={handleInputChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Date de réservation</Form.Label>
+              <Form.Control
+                type="date"
+                name="date_reservation"
+                value={formData.date_reservation || ''} // Vérifier si les données existent
+                onChange={handleInputChange}
+              />
+            </Form.Group>
+            <Button type="submit" variant="primary" disabled={submitting}>
+              {submitting ? 'En cours...' : editingId ? 'Modifier' : 'Ajouter'}
+            </Button>
+          </Form>
         );
-      case 'flights':
-        return (
-          <form onSubmit={handleFormSubmit}>
-            <div className="mb-3">
-              <label>Numéro de Vol</label>
-              <input type="text" name="numeroVol" className="form-control" value={formData.numeroVol || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Heure de Départ</label>
-              <input type="datetime-local" name="heureDepart" className="form-control" value={formData.heureDepart || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Heure d'Arrivée</label>
-              <input type="datetime-local" name="heureArrivee" className="form-control" value={formData.heureArrivee || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Statut</label>
-              <input type="text" name="statut" className="form-control" value={formData.statut || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Porte</label>
-              <input type="text" name="porte" className="form-control" value={formData.porte || ''} onChange={handleInputChange} required />
-            </div>
-
-
-
-            <div className="mb-3">
-              <label>Type d'Avion</label>
-              <input type="text" name="typeAvion" className="form-control" value={formData.typeAvion || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label> Aéroport Départ</label>
-              <select name="idAeroportDepart" className="form-control" value={formData.idAeroportDepart} onChange={handleInputChange} required >
-                <option value="">Sélectionnez un aéroport de départ</option> {aeroports.map((aeroport) => (<option key={aeroport.idAeroport} value={aeroport.idAeroport}> {aeroport.nomAeroport} </option>))}
-
-              </select> </div> <div className="mb-3">
-              <label> Aéroport Arrivée</label> <select name="idAeroportArrivee" className="form-control" value={formData.idAeroportArrivee} onChange={handleInputChange} required >
-                <option value="">Sélectionnez un aéroport d'arrivée</option> {aeroports.map((aeroport) => (<option key={aeroport.idAeroport} value={aeroport.idAeroport}> {aeroport.nomAeroport} </option>))}
-              </select> </div>
-
-            <div className="mb-3">
-              <label>Avion</label> <select name="idAvion" className="form-control" value={formData.idAvion} onChange={handleInputChange} required >
-                <option value="">Sélectionnez un avion</option> {avions.map((avion) => (<option key={avion.idAvion} value={avion.idAvion}> {avion.typeAvion}
-                  {avion.typeAvion} </option>))}
-              </select> </div>
-
-
-
-            <div className="mb-3">
-              <label>Nombre Réservé</label>
-              <input type="number" name="nbreReservee" className="form-control" value={formData.nbreReservee || ''} onChange={handleInputChange} required />
-            </div>
-            <button type="submit" className="btn btn-primary" disabled={submitting}>
-              {submitting ? 'Ajout en cours...' : editingId ? 'Modifier' : 'Ajouter'}
-            </button>
-          </form>
-        );
-      case 'airports':
-        return (
-          <form onSubmit={handleFormSubmit}>
-            <div className="mb-3">
-              <label>Nom de l'Aéroport</label>
-              <input type="text" name="nomAeroport" className="form-control" value={formData.nomAeroport || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Ville</label>
-              <input type="text" name="villeAeroport" className="form-control" value={formData.villeAeroport || ''} onChange={handleInputChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Pays</label>
-              <input type="text" name="paysAeroport" className="form-control" value={formData.paysAeroport || ''} onChange={handleInputChange} required />
-            </div>
-            <button type="submit" className="btn btn-primary" disabled={submitting}>
-              {submitting ? 'Ajout en cours...' : editingId ? 'Modifier' : 'Ajouter'}
-            </button>
-          </form>
-        );
-
       default:
-        return <p>Sélectionnez une section pour ajouter un élément.</p>;
+        return null;
+    }
+  };
+
+
+  const renderTableHeaders = () => {
+    let headers = [];
+
+    if (activeSection === 'planes') {
+      headers = ['ID', 'Type', 'Fabriquant', 'Capacité', ''];
+    }
+    if (activeSection === 'airports') {
+      headers = ['ID', 'Nom de l\'aéroport', 'Ville', 'Pays', ''];
+    }
+    if (activeSection === 'flights') {
+      headers = ['ID', 'Numéro de vol', 'Départ', 'Arrivée', 'Porte', 'Status', 'Type Avion', ''];
+    }
+    if (activeSection === 'passengers') {
+      headers = ['ID', 'Nom', 'Prenom', 'Date Naissance', 'Email', 'Numero Téléphone', ''];
+    }
+    if (activeSection === 'reservations') {
+      headers = ['ID', 'Date', 'Passager', 'Vol', 'Prix', 'Statut', ''];
+    }
+
+
+    return (
+      <tr>
+        {headers.map((header, index) => (
+          <th key={index}>{header}</th>
+        ))}
+      </tr>
+    );
+  };
+
+  const renderTableRows = () => {
+    if (data && data.length > 0) {
+      return data.map((item) => (
+        <tr key={item.id}>
+          {/* Render rows according to the section */}
+          {activeSection === 'planes' && (
+            <>
+              <td>{item.id}</td>
+
+              <td>{item.type_avion}</td>
+              <td>{item.fabriquant_avion
+              }</td>
+              <td>{item.capacite_avion
+              }</td>
+              <td><span
+                onClick={() => handleEdit(item.id)}
+                className="action-text-btn edit-btn"
+                role="button"
+                aria-label="Edit Reservation"
+              >
+                <FaEdit color="green" size="1.5em" />
+              </span>
+
+                <span
+                  onClick={() => handleDelete(item.id)}
+                  className="action-text-btn delete-btn"
+                  role="button"
+                  aria-label="Delete Reservation"
+                >
+                  <FaTrashAlt color="red" size="1.5em" />
+                </span></td>
+            </>
+
+          )}
+          {activeSection === 'airports' && (
+            <>
+              <td>{item.id}</td>
+              <td>{item.nom_aeroport}</td>
+              <td>{item.ville_aeroport}</td>
+              <td>{item.pays_aeroport}</td>
+              <td>
+                <span
+                  onClick={() => handleEdit(item.id)}
+                  className="action-text-btn edit-btn"
+                  role="button"
+                  aria-label="Edit Reservation"
+                >
+                  <FaEdit color="green" size="1.5em" />
+                </span>
+
+                <span
+                  onClick={() => handleDelete(item.id)}
+                  className="action-text-btn delete-btn"
+                  role="button"
+                  aria-label="Delete Reservation"
+                >
+                  <FaTrashAlt color="red" size="1.5em" />
+                </span>
+              </td>
+
+            </>
+          )}
+          {
+            activeSection === 'flights' && (
+              <>
+                <td>{item.id}</td>
+                <td>{item.numero_vol}</td>
+                <td>{new Date(item.heure_depart).toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</td>
+                <td>{new Date(item.heure_arrivee).toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</td>
+
+                <td>{item.porte}</td>
+                <td>{item.statut}</td>
+                <td>{item.type_avion}</td>
+
+                <td>
+                  <span
+                    onClick={() => handleEdit(item.id)}
+                    className="action-text-btn edit-btn"
+                    role="button"
+                    aria-label="Edit Reservation"
+                  >
+                    <FaEdit color="green" size="1.5em" />
+                  </span>
+
+                  <span
+                    onClick={() => handleDelete(item.id)}
+                    className="action-text-btn delete-btn"
+                    role="button"
+                    aria-label="Delete Reservation"
+                  >
+                    <FaTrashAlt color="red" size="1.5em" />
+                  </span>
+                </td>
+              </>
+            )
+          }
+          {
+            activeSection === 'passengers' && (
+              <>
+                <td>{item.id}</td>
+                <td>{item.nom_passager}</td>
+                <td>{item.
+                  prenom_passager
+                }</td>
+
+                <td>{item.
+                  date_naissance
+                }</td>
+                <td>{item.email_passager
+                }</td>
+                <td>{item.
+                  telephone_passager
+                }</td>
+                <td><span
+                  onClick={() => handleEdit(item.id)}
+                  className="action-text-btn edit-btn"
+                  role="button"
+                  aria-label="Edit Reservation"
+                >
+                  <FaEdit color="green" size="1.5em" />
+                </span>
+
+                  <span
+                    onClick={() => handleDelete(item.id)}
+                    className="action-text-btn delete-btn"
+                    role="button"
+                    aria-label="Delete Reservation"
+                  >
+                    <FaTrashAlt color="red" size="1.5em" />
+                  </span></td>
+              </>
+            )
+          }
+          {
+            activeSection === 'reservations' && (
+              <>
+                <td>{item.id}</td>
+
+                <td>{item.date_reservation}</td>
+                <td>{item.passager ? item.passager.email_passager : 'No email'}</td>
+
+                <td>{item.vol ? item.vol.numero_vol : 'No flight number'}</td>  <td>{item.prix_reservation}</td>
+                <td>{item.statut_reservation}</td>
+
+                <td>
+                  <span
+                    onClick={() => handleEdit(item.id)}
+                    className="action-text-btn edit-btn"
+                    role="button"
+                    aria-label="Edit Reservation"
+                  >
+                    <FaEdit color="green" size="1.5em" />
+                  </span>
+
+                  <span
+                    onClick={() => handleDelete(item.id)}
+                    className="action-text-btn delete-btn"
+                    role="button"
+                    aria-label="Delete Reservation"
+                  >
+                    <FaTrashAlt color="red" size="1.5em" />
+                  </span>
+                </td>
+              </>
+            )
+          }
+        </tr >
+      ));
+    } else {
+      return <tr><td colSpan="100%">Aucune donnée disponible.</td></tr>;
     }
   };
 
   return (
-    <div className="d-flex">
+    <div className="dashboard">
       <div className="sidebar">
-        <h2 className="sidebar-title">Menu</h2>
         <ul className="sidebar-nav">
           <li>
-            <a href="#planes" onClick={() => handleMenuClick('planes', 'http://localhost:5235/api/Avion')}>
+            <a href="#dashboard" onClick={() => handleMenuClick('dashboard')}>
+              <h3>Dashboard</h3>
+            </a>
+          </li>
+          <li>
+            <a href="#planes" onClick={() => handleMenuClick('planes')}>
               <FaPlane /> Avions
             </a>
           </li>
           <li>
-            <a href="#airports" onClick={() => handleMenuClick('airports', 'http://localhost:5235/api/Aeroport')}>
+            <a href="#airports" onClick={() => handleMenuClick('airports')}>
               <FaBuilding /> Aéroports
             </a>
           </li>
           <li>
-            <a href="#flights" onClick={() => handleMenuClick('flights', 'http://localhost:5235/api/Vol')}>
-              <FaAirbnb /> Vols
+            <a href="#flights" onClick={() => handleMenuClick('flights')}>
+              <FaTicketAlt /> Vols
             </a>
           </li>
           <li>
-            <a href="#passengers" onClick={() => handleMenuClick('passengers', 'http://localhost:5235/api/Passager')}>
+            <a href="#passengers" onClick={() => handleMenuClick('passengers')}>
               <FaUser /> Passagers
             </a>
           </li>
           <li>
-            <a href="#reservations" onClick={() => handleMenuClick('reservations', 'http://localhost:5235/api/Reservation')}>
+            <a href="#reservations" onClick={() => handleMenuClick('reservations')}>
               <FaTicketAlt /> Réservations
             </a>
           </li>
         </ul>
       </div>
-
-      <div className="main-content">
-        <Navbar bg="transparent" variant="dark" expand="lg" className="custom-navbar">
-          <Container>
-            <Navbar.Brand href="#home">Dashboard</Navbar.Brand>
-            <Navbar.Toggle aria-controls="navbar-nav" />
-            <Navbar.Collapse id="navbar-nav">
-              <Nav className="ms-auto">
-                <Nav.Link href="#home">Accueil</Nav.Link>
-                <Nav.Link href="#signin">Sign in</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-
-        <div className="container mt-5">
-          <button className="btn btn-success mb-3" class="btn-new" onClick={handleNew}>Nouveau</button>
-
+      <div className="content">
+        <Container>
+          <h2>{activeSection === 'planes' ? 'Gestion des Avions' : activeSection === 'airports' ? 'Gestion des Aéroports' : activeSection === 'flights' ? 'Gestion des Vols' : activeSection === 'passengers' ? 'Gestion des Passagers' : 'Gestion des Réservations'}</h2>
           {loading && <p>Chargement...</p>}
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {error && <p className="text-danger">{error}</p>}
+          <Table striped bordered hover>
+            <thead>{renderTableHeaders()}</thead>
+            <tbody>{renderTableRows()}</tbody>
+          </Table>
 
-          {!showForm && activeSection && (
-            <div>
-              <h3>Liste des {activeSection === 'planes' ? 'Avions' : activeSection === 'airports' ? 'Aéroports' : activeSection === 'flights' ? 'Vols' : activeSection === 'reservations' ? 'Réservations' : 'Passagers'}</h3>
-              <table className="table table-bordered">
-                <thead>
-                  <tr>
-                    {activeSection === 'planes' && (
-                      <>
-                        <th>ID</th>
-                        <th>Type</th>
-                        <th>Capacité</th>
-                        <th>Fabriquant</th>
-                        <th>Actions</th>
-                      </>
-                    )}
-                    {activeSection === 'reservations' && (
-                      <>
-                        <th>ID</th>
-                        <th>ID Passager</th>
-                        <th>ID Vol</th>
-                        <th>Date Réservation</th>
-                        <th>Statut</th>
-                        <th>Prix</th>
-                      </>
-                    )}
-                    {activeSection === 'airports' && (
-                      <>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Ville</th>
-                        <th>Pays</th>
-                        <th>Actions</th>
-                      </>
-                    )}
-                    {activeSection === 'flights' && (
-                      <>
-                        <th>ID</th>
-                        <th>Numéro</th>
-                        <th>Heure de départ</th>
-                        <th>Heure d'arrivée</th>
-                        <th>Statut</th>
-                        <th>Porte</th>
-                        <th>Type d'avion</th>
-                        <th>Actions</th>
-                      </>
-                    )}
-                    {activeSection === 'passengers' && (
-                      <>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Email</th>
-                        <th>Date de naissance</th>
-                        <th>Téléphone</th>
-                        <th>Numéro Passeport</th>
-                        {/* <th>Actions</th> */}
-                      </>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.length === 0 ? (
-                    <tr><td colSpan={8}>Aucune donnée disponible</td></tr>
-                  ) : (
-                    data.map((item) => (
-                      <tr key={item.idReservation || item.idPassager || item.idAeroport || item.idAvion || item.idVol}>
-                        <td>{item.idReservation || item.idPassager || item.idAeroport || item.idAvion || item.idVol}</td>
-                        {activeSection === 'reservations' && (
-                          <>
-                            <td>{item.idPassager}</td>
-                            <td>{item.idVol}</td>
-                            <td>{item.dateReservation}</td>
-                            <td>{item.statutReservation}</td>
-                            <td>{item.prixReservation}</td>
-                          </>
-                        )}
-                        {activeSection !== 'reservations' && (
-                          <>
-                            <td>{item.nomAeroport || item.typeAvion || item.numeroVol || item.nomPassager}</td>
-                            <td>{item.villeAeroport || item.capaciteAvion || item.depart || item.emailPassager}</td>
-                            <td>{item.paysAeroport || item.fabriquantAvion || item.arrivee || item.volId}</td>
-                          </>
-                        )}
-                        <td>
-                          {activeSection !== 'reservations' && activeSection !== 'passengers' && (
-                            <>
-                              <button onClick={() => handleEdit(item.idReservation || item.idAeroport || item.idAvion || item.idVol || item.idPassager)} className="btn btn-warning btn-sm">Modifier</button>
-                              <button onClick={() => handleDelete(item.idReservation || item.idAeroport || item.idAvion || item.idVol || item.idPassager)} className="btn btn-danger btn-sm ms-2">Supprimer</button>
-                            </>
-                          )}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+          {showForm && (
+            <Modal show={showForm} onHide={() => setShowForm(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>{editingId ? 'Modifier' : 'Ajouter'} {activeSection === 'planes' ? 'un Avion' : activeSection === 'airports' ? 'un Aéroport' : activeSection === 'flights' ? 'un Vol' : activeSection === 'passengers' ? 'un Passager' : 'une Réservation'}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {renderForm()}
+              </Modal.Body>
+            </Modal>
           )}
 
-          {showForm && renderForm()}
-        </div>
+          <ToastContainer position="top-end">
+            <Toast onClose={() => setToastMessage('')} show={toastMessage !== ''} delay={3000} autohide>
+              <Toast.Body className={toastType === 'success' ? 'text-success' : 'text-danger'}>
+                {toastMessage}
+              </Toast.Body>
+            </Toast>
+          </ToastContainer>
+        </Container>
       </div>
     </div>
   );
