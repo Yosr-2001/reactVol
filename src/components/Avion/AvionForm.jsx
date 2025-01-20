@@ -5,29 +5,25 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import "../../assets/style/avion.scss";
 import { useNavigate } from "react-router-dom";
-import { apiRequest } from "../../utils/api";  
+import axios from "axios";
+
 
 function AvionForm() {
   const navigate = useNavigate();
 
+  const [showForm, setShowForm] = useState(false);
+  const [activeSection, setActiveSection] = useState('planes');
+
   useEffect(() => {
     Aos.init();
-    // const token = sessionStorage.getItem("jwttoken");
-    // if (!token) {
-    //   navigate("/sign-in");
-    // }
-  },
-    // [navigate]
-  );
+  }, []);
 
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     typeAvion: "",
     capaciteAvion: "",
     fabriquantAvion: "",
   });
-
-  const [errors, setErrors] = useState({});
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -47,6 +43,8 @@ function AvionForm() {
     return newErrors;
   };
 
+  const API_BASE_URL = "http://127.0.0.1:8000/api";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -63,12 +61,16 @@ function AvionForm() {
     };
 
     try {
-      const response = await apiRequest("/avions", "POST", newAvion);
-      console.log("Avion added successfully:", response);
-      setFormData({ typeAvion: "", capaciteAvion: "", fabriquantAvion: "" });
-      setErrors({});
-      alert("Avion created successfully!");
-      navigate("/"); // Redirect to home or another page
+      const response = await axios.post(`${API_BASE_URL}/avions`, newAvion);
+      if (response.status === 201) {
+        console.log("Avion added successfully:", response.data);
+        setFormData({ typeAvion: "", capaciteAvion: "", fabriquantAvion: "" });
+        setErrors({});
+        alert("Avion created successfully!");
+        navigate("/Dashboard/#planes");
+      } else {
+        throw new Error(`Failed to create Avion. Status code: ${response.status}`);
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
       setErrors({ server: error.message });

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Container, Button, Table, Modal, Form, Toast, ToastContainer } from "react-bootstrap";
 import axios from "axios";
-import { FaPlane, FaBuilding, FaAirbnb, FaUser, FaTicketAlt, FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaPlane, FaBuilding, FaUser, FaTicketAlt, FaEdit, FaTrashAlt } from "react-icons/fa";
 import './Dashboard.css';
+import { useNavigate } from "react-router-dom";
+
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState('planes');
@@ -14,7 +16,7 @@ const Dashboard = () => {
   const [submitting, setSubmitting] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
-  const [toastType, setToastType] = useState('success');  // success or error
+  const [toastType, setToastType] = useState('success');
 
   const API_BASE_URL = "http://127.0.0.1:8000/api";
 
@@ -102,6 +104,24 @@ const Dashboard = () => {
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleAddClick = () => {
+    switch (activeSection) {
+      case 'planes':
+        navigate('/add-avion');
+        break;
+      case 'airports':
+        navigate('/add-aeroport');
+        break;
+      case 'flights':
+        navigate('/add-vol');
+        break;
+      default:
+        break;
+    }
+  };
+
   const handleEdit = async (id) => {
     setEditingId(id);
     setShowForm(true);
@@ -133,8 +153,8 @@ const Dashboard = () => {
     }
   };
   const handleFormSubmit = async (e) => {
-    e.preventDefault(); // Empêcher le rechargement de la page
-    setSubmitting(true); // Empêcher l'envoi de plusieurs fois
+    e.preventDefault();
+    setSubmitting(true);
 
     try {
       const url = activeSection === 'planes' ? `${API_BASE_URL}/avions` :
@@ -144,17 +164,17 @@ const Dashboard = () => {
               activeSection === 'reservations' ? `${API_BASE_URL}/reservations` :
                 '';
 
-      const method = editingId ? 'PUT' : 'POST'; // Vérifier si c'est une mise à jour ou un ajout
+      const method = editingId ? 'PUT' : 'POST';
       const response = await axios({
         method,
-        url: editingId ? `${url}/${editingId}` : url, // Si en mode édition, ajouter l'ID
-        data: formData // Envoyer les données du formulaire
+        url: editingId ? `${url}/${editingId}` : url,
+        data: formData
       });
 
       setToastMessage(editingId ? "Modification effectuée avec succès" : "Ajout effectué avec succès");
       setToastType('success');
-      setShowForm(false); // Fermer le formulaire
-      handleMenuClick(activeSection); // Rafraîchir les données après modification
+      setShowForm(false);
+      handleMenuClick(activeSection);
     } catch (error) {
       setToastMessage("Erreur lors de l'ajout ou de la modification.");
       setToastType('error');
@@ -167,10 +187,251 @@ const Dashboard = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-
   const renderForm = () => {
     console.log("Form data:", formData); // Vérifier si formData contient des données
     switch (activeSection) {
+      case 'airports': return (
+        <Form onSubmit={handleFormSubmit}>
+          {/* Champs de saisie du formulaire */}
+          <Form.Group className="mb-3">
+            <Form.Label>Nom de l'Aéroport</Form.Label>
+            <Form.Control
+              type="text"
+              name="nom_aeroport"
+              value={formData.nom_aeroport || ''} // Vérifier si les données existent
+              onChange={handleInputChange} // Mettre à jour formData
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Ville</Form.Label>
+            <Form.Control
+              type="text"
+              name="ville"
+              value={formData.ville_aeroport || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Pays</Form.Label>
+            <Form.Control
+              type="text"
+              name="pays"
+              value={formData.pays_aeroport || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Button type="submit" variant="primary" disabled={submitting}>
+            {submitting ? 'En cours...' : editingId ? 'Modifier' : 'Ajouter'}
+          </Button>
+        </Form>
+      );
+      case 'flights': return (
+        <Form onSubmit={handleFormSubmit}>
+          {/* Champs de saisie du formulaire */}
+          <Form.Group className="mb-3">
+            <Form.Label>Numéro du Vol</Form.Label>
+            <Form.Control
+              type="text"
+              name="numero_vol"
+              value={formData.numero_vol || ''} // Vérifier si les données existent
+              onChange={handleInputChange} // Mettre à jour formData
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Heure de Départ</Form.Label>
+            <Form.Control
+              type="text"
+              name="heure_depart"
+              value={formData.heure_depart || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Heure d'Arrivée</Form.Label>
+            <Form.Control
+              type="text"
+              name="heure_arrivee"
+              value={formData.heure_arrivee || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Statut</Form.Label>
+            <Form.Select
+              name="statut"
+              value={formData.statut || ''} // Vérifier si une valeur existe
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Sélectionner un statut</option>
+              <option value="Programmé">Programmé</option>
+              <option value="Annulé">Annulé</option>
+              <option value="En Retard">En Retard</option>
+              <option value="Parti">Parti</option>
+            </Form.Select>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Porte</Form.Label>
+            <Form.Control
+              type="text"
+              name="porte"
+              value={formData.porte || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Type d'Avion</Form.Label>
+            <Form.Control
+              type="text"
+              name="type_avion"
+              value={formData.type_avion || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Aéroport de Départ</Form.Label>
+            <Form.Control
+              type="number"
+              name="id_aeroport_depart"
+              value={formData.id_aeroport_depart || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Aéroport d'Arrivée</Form.Label>
+            <Form.Control
+              type="number"
+              name="id_aeroport_arrivee"
+              value={formData.id_aeroport_arrivee || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Button type="submit" variant="primary" disabled={submitting}>
+            {submitting ? 'En cours...' : editingId ? 'Modifier' : 'Ajouter'}
+          </Button>
+        </Form>
+      );
+      case 'passengers': return (
+        <Form onSubmit={handleFormSubmit}>
+          {/* Champs de saisie du formulaire */}
+          <Form.Group className="mb-3">
+            <Form.Label>Nom du Passager</Form.Label>
+            <Form.Control
+              type="text"
+              name="nom_passager"
+              value={formData.nom_passager || ''} // Vérifier si les données existent
+              onChange={handleInputChange} // Mettre à jour formData
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Prénom du Passager</Form.Label>
+            <Form.Control
+              type="text"
+              name="prenom_passager"
+              value={formData.prenom_passager || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              name="email_passager"
+              value={formData.email_passager || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Date de Naissance</Form.Label>
+            <Form.Control
+              type="date"
+              name="date_naissance"
+              value={formData.date_naissance || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Téléphone</Form.Label>
+            <Form.Control
+              type="tel"
+              name="telephone_passager"
+              value={formData.telephone_passager || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Numéro de Passeport</Form.Label>
+            <Form.Control
+              type="text"
+              name="numero_passeport"
+              value={formData.numero_passeport || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Button type="submit" variant="primary" disabled={submitting}>
+            {submitting ? 'En cours...' : editingId ? 'Modifier' : 'Ajouter'}
+          </Button>
+        </Form>
+      );
+
+      case 'planes': return (
+        <Form onSubmit={handleFormSubmit}>
+          {/* Champs de saisie du formulaire */}
+          <Form.Group className="mb-3">
+            <Form.Label>Type d'Avion</Form.Label>
+            <Form.Control
+              type="text"
+              name="type_avion"
+              value={formData.type_avion || ''} // Vérifier si les données existent
+              onChange={handleInputChange} // Mettre à jour formData
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Capacité de l'Avion</Form.Label>
+            <Form.Control
+              type="number"
+              name="capacite_avion"
+              value={formData.capacite_avion || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Fabricant de l'Avion</Form.Label>
+            <Form.Control
+              type="text"
+              name="fabriquant_avion"
+              value={formData.fabriquant_avion || ''} // Vérifier si les données existent
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+
+
+          <Button type="submit" variant="primary" disabled={submitting}>
+            {submitting ? 'En cours...' : editingId ? 'Modifier' : 'Ajouter'}
+          </Button>
+        </Form>
+      );
+
       case 'reservations':
         return (
           <Form onSubmit={handleFormSubmit}>
@@ -190,17 +451,32 @@ const Dashboard = () => {
               <Form.Control
                 type="number"
                 name="vol"
-                value={formData.vol || ''} // Vérifier si les données existent
+                value={formData.id_vol || ''} // Vérifier si les données existent
                 onChange={handleInputChange}
                 required
               />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Statut de la réservation</Form.Label>
+              <Form.Select
+                name="statut_reservation"
+                value={formData.statut_reservation || ''} // Vérifier si une valeur existe
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Sélectionner un statut</option> {/* Option vide par défaut */}
+                <option value="Annuler">Annuler</option>
+                <option value="En attente">En attente</option>
+                <option value="Confirmer">Confirmer</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Prix Reservation</Form.Label>
               <Form.Control
                 type="text"
-                name="statut_reservation"
-                value={formData.statut_reservation || ''} // Vérifier si les données existent
+                name="prix_reservation"
+                value={formData.prix_reservation || ''} // Vérifier si les données existent
                 onChange={handleInputChange}
                 required
               />
@@ -208,9 +484,9 @@ const Dashboard = () => {
             <Form.Group className="mb-3">
               <Form.Label>Date de réservation</Form.Label>
               <Form.Control
-                type="date"
+                type="text"
                 name="date_reservation"
-                value={formData.date_reservation || ''} // Vérifier si les données existent
+                value={formData.date_reservation || '***'} // Vérifier si les données existent
                 onChange={handleInputChange}
               />
             </Form.Group>
@@ -223,7 +499,6 @@ const Dashboard = () => {
         return null;
     }
   };
-
 
   const renderTableHeaders = () => {
     let headers = [];
@@ -258,7 +533,7 @@ const Dashboard = () => {
     if (data && data.length > 0) {
       return data.map((item) => (
         <tr key={item.id}>
-          {/* Render rows according to the section */}
+
           {activeSection === 'planes' && (
             <>
               <td>{item.id}</td>
@@ -464,10 +739,20 @@ const Dashboard = () => {
         </ul>
       </div>
       <div className="content">
+
         <Container>
+
           <h2>{activeSection === 'planes' ? 'Gestion des Avions' : activeSection === 'airports' ? 'Gestion des Aéroports' : activeSection === 'flights' ? 'Gestion des Vols' : activeSection === 'passengers' ? 'Gestion des Passagers' : 'Gestion des Réservations'}</h2>
           {loading && <p>Chargement...</p>}
           {error && <p className="text-danger">{error}</p>}
+          <Button
+            variant="primary"
+            onClick={handleAddClick}
+            style={{ display: (activeSection === 'planes' || activeSection === 'airports' || activeSection === 'flights') ? 'block' : 'none' }}
+          >
+            Ajouter {activeSection === 'planes' ? 'Avion' : activeSection === 'airports' ? 'Aéroport' : activeSection === 'flights' ? 'Vol' : ''}
+          </Button>
+
           <Table striped bordered hover>
             <thead>{renderTableHeaders()}</thead>
             <tbody>{renderTableRows()}</tbody>

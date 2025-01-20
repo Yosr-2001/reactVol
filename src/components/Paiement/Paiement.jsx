@@ -1,301 +1,172 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Card, Spinner } from "react-bootstrap";
-import { FaTicketAlt } from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
-import { createReservation, getVols } from "../../Api/Api";
-import '../../main.scss';
+
 
 const Paiement = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { formData, idPassager } = location.state || {};
+
+    console.log("Location State in Paiement:", location.state);
+
+    const { formData, idPassager, vol } = location.state || {};
     const [loading, setLoading] = useState(false);
-    const [validated, setValidated] = useState(false);
     const [error, setError] = useState(null);
-    const [vols, setVols] = useState([]);
-    const [selectedVol, setSelectedVol] = useState(null);
     const [prixTotal, setPrixTotal] = useState(0);
-    const [classType, setClassType] = useState(formData.classType || "Economy");
+    const [classType, setClassType] = useState("Economy");
 
-    // Fonction pour calculer le prix total de la réservation
-    const calculPrixReservationTotal = (prixVolBrut, classType, nbPassagers = 1) => {
-        if (typeof prixVolBrut !== 'number' || isNaN(prixVolBrut)) {
-            console.error("Prix brut invalide:", prixVolBrut);
-            return 0;
-        }
-
+    const calculPrixReservationTotal = (prix, classType) => {
         const multiplier = classType === "Business" ? 2.0 : classType === "Premium" ? 1.5 : 1.0;
-        return prixVolBrut * multiplier * nbPassagers;
+        return prix ? prix * multiplier : 0;
     };
 
-    // Récupérer la liste des vols
     useEffect(() => {
-        const fetchVols = async () => {
-            try {
-                const response = await getVols();
-                console.log("Réponse de l'API pour les vols:", response);
-                setVols(response.data);
-            } catch (error) {
-                console.error("Erreur lors de la récupération des vols :", error);
-                setError("Erreur lors de la récupération des vols.");
-            }
-        };
-
-        fetchVols();
-    }, []);
-
-    // Calculer le prix total lorsqu'un vol ou la classe change
-    useEffect(() => {
-        if (selectedVol) {
-            const total = calculPrixReservationTotal(selectedVol.prixVolBrut, classType, 1);
-            console.log("Prix total calculé:", total);
+        if (vol && vol.prix) {
+            const total = calculPrixReservationTotal(vol.prix, classType);
             setPrixTotal(total);
         }
-    }, [selectedVol, classType]);
+    }, [vol, classType]);
 
-    // Soumettre le formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const form = e.currentTarget;
+        setLoading(true);
+        setError(null);
 
-        if (form.checkValidity() === false) {
-            e.stopPropagation();
-        } else {
-            setLoading(true);
-            setError(null);
-
-            const reservationBody = {
-                idPassager,
-                passager: {
-                    idPassager,
-                    nomPassager: formData.nomPassager,
-                    prenomPassager: formData.prenomPassager,
-                    emailPassager: formData.emailPassager,
-                    dateNaissance: formData.dateNaissance,
-                    telephonePassager: formData.telephonePassager,
-                    numeroPasseport: formData.numeroPasseport
-                },
-                idVol: selectedVol.idVol,
-                vol: selectedVol,
-                dateReservation: new Date().toISOString(),
-                statutReservation: "Confirmed",
-                nbrePassagers: 1,
-                typeClasse: classType,
-                prixReservationTotal: prixTotal
-            };
-
-            try {
-                const response = await createReservation(reservationBody);
-                console.log("Reservation ===> ", response);
-
-                setLoading(false);
-                alert("Réservation réussie ! Votre billet a été confirmé.");
-                navigate("/ticket", {
-                    state: {
-                        passenger: formData,
-                        flight: { idVol: selectedVol.idVol },
-                        reservation: response
-                    }
-                });
-            } catch (err) {
-                setLoading(false);
-                // setError("Erreur lors de la création de la réservation.");
-            }
+        if (!formData || !vol || !idPassager) {
+            setError("Les données de vol ou passager sont manquantes.");
+            setLoading(false);
+            return;
         }
 
-        setValidated(true);
-    };
+        const reservationBody = {
+            idPassager,
+            idVol: vol.id,
+            passager: {
+                idPassager,
+                nomPassager: formData.nomPassager,
+                prenomPassager: formData.prenomPassager,
+                emailPassager: formData.emailPassager,
+                dateNaissance: formData.dateNaissance,
+                telephonePassager: formData.telephonePassager,
+                numeroPasseport: formData.numeroPasseport,
+            },
+            vol,
+            dateReservation: new Date().toISOString(),
+            statutReservation: "Confirmed",
+            typeClasse: classType,
+            prixReservationTotal: prixTotal,
+        };
 
-    // Voir le billet
-    const handleViewTicket = () => {
-        navigate("/ticket", {
-            state: {
-                passenger: formData,
-                flight: { idVol: selectedVol?.idVol }
+        console.log("Reservation Body:", reservationBody); // Debug log
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/reservations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reservationBody),
+            });
+
+            if (!response.ok) {
+                const errorDetails = await response.json(); // Handle the error response from the backend
+                setError(`Erreur: ${errorDetails.message || 'Détails de l\'erreur non fournis'}`);
+                setLoading(false);
+                console.log('Error response:', errorDetails); // Log error details for debugging
+            } else {
+                const data = await response.json();
+                setLoading(false);
+                alert("Réservation réussie !");
+                navigate("/ticket", {
+                    state: { reservation: data },
+                });
             }
-        });
+        } catch (err) {
+            setError("Erreur lors de la création de la réservation.");
+            setLoading(false);
+            console.error('Request failed', err); // Log the error for further debugging
+        }
     };
 
     return (
         <>
             <Navbar />
-            <div className="reservation-page-background">
-                <Container className="mt-5">
-                    <Row className="justify-content-center">
-                        <Col md={8}>
-                            <Card className="reservation-card shadow-lg border-0">
-                                <Card.Body>
-                                    <h2 className="text-center mb-4 text-dark fw-bold">
-                                        Confirmer la Réservation
-                                    </h2>
-                                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                                        <Row>
-                                            <Col md={6}>
-                                                <Form.Group controlId="idPassager" className="mb-3">
-                                                    <Form.Label>ID Passager</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        placeholder="ID Passager"
-                                                        required
-                                                        value={idPassager}
-                                                        readOnly
-                                                    />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Veuillez entrer un ID Passager valide.
-                                                    </Form.Control.Feedback>
-                                                </Form.Group>
-                                            </Col>
-                                            <Col md={6}>
-                                                <Form.Group controlId="idVol" className="mb-3">
-                                                    <Form.Label>Vol</Form.Label>
-                                                    <Form.Select
-                                                        required
-                                                        onChange={(e) => setSelectedVol(vols.find(vol => vol.idVol === parseInt(e.target.value)))}
-                                                    >
-                                                        <option value="">Sélectionnez un vol</option>
-                                                        {vols.map(vol => (
-                                                            <option key={vol.idVol} value={vol.idVol}>
-                                                                {vol.aeroportDepart.villeAeroport} à {vol.aeroportArrivee.villeAeroport}
-                                                            </option>
-                                                        ))}
-                                                    </Form.Select>
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Veuillez sélectionner un vol valide.
-                                                    </Form.Control.Feedback>
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
+            <Container className="mt-5">
+                <Row className="justify-content-center">
+                    <Col md={8}>
+                        <Card className="shadow-lg">
+                            <Card.Body>
+                                <h2 className="text-center mb-4">Confirmation de Réservation</h2>
+                                <Form onSubmit={handleSubmit}>
+                                    {/* Displaying flight and passenger info */}
+                                    <Form.Group controlId="numeroPasseport" className="mb-3">
+                                        <Form.Label>Numéro de Passeport</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={formData?.numeroPasseport || "Non renseigné"}
+                                            readOnly
+                                        />
+                                    </Form.Group>
+                                    <Form.Group controlId="volDetails" className="mb-3">
+                                        <Form.Label>Vol sélectionné</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={`${vol?.aeroport_depart?.ville_aeroport} → ${vol?.aeroport_arrivee?.ville_aeroport}`}
+                                            readOnly
+                                        />
+                                    </Form.Group>
 
-                                        <Row>
-                                            <Col md={6}>
-                                                <Form.Group controlId="dateReservation" className="mb-3">
-                                                    <Form.Label>Date de Réservation</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        placeholder="Date de Réservation"
-                                                        required
-                                                        value={new Date().toISOString()}
-                                                        readOnly
-                                                    />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Veuillez entrer une date de réservation valide.
-                                                    </Form.Control.Feedback>
-                                                </Form.Group>
-                                            </Col>
-                                            <Col md={6}>
-                                                <Form.Group controlId="nbrePassagers" className="mb-3">
-                                                    <Form.Label>Nombre de Passagers</Form.Label>
-                                                    <Form.Control
-                                                        type="number"
-                                                        placeholder="1"
-                                                        required
-                                                        min="1"
-                                                        value={1}
-                                                        readOnly
-                                                    />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Veuillez entrer un nombre valide de passagers.
-                                                    </Form.Control.Feedback>
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
+                                    {/* Check the status of the selected flight */}
+                                    <Form.Group controlId="prix" className="mb-3">
+                                        <Form.Label>Prix du Vol Brut</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={vol?.prix ? `${vol?.prix} €` : "Non renseigné"}
+                                            readOnly
+                                        />
+                                    </Form.Group>
 
-                                        <Row>
-                                            <Col md={6}>
-                                                <Form.Group controlId="typeClasse" className="mb-3">
-                                                    <Form.Label>Classe</Form.Label>
-                                                    <Form.Select
-                                                        value={classType}
-                                                        onChange={(e) => setClassType(e.target.value)}  // Met à jour la classe
-                                                        required
-                                                    >
-                                                        <option value="Economy">Economy</option>
-                                                        <option value="Premium">Premium</option>
-                                                        <option value="Business">Business</option>
-                                                    </Form.Select>
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Veuillez sélectionner une classe valide.
-                                                    </Form.Control.Feedback>
-                                                </Form.Group>
-                                            </Col>
-                                            <Col md={6}>
-                                                <Form.Group controlId="statutReservation" className="mb-3">
-                                                    <Form.Label>Statut de la Réservation</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        placeholder="Confirmé"
-                                                        required
-                                                        value="Confirmé"
-                                                        readOnly
-                                                    />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Veuillez entrer un statut valide.
-                                                    </Form.Control.Feedback>
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
+                                    {/* Display class and price */}
+                                    <Form.Group controlId="classType" className="mb-3">
+                                        <Form.Label>Classe</Form.Label>
+                                        <Form.Select
+                                            value={classType}
+                                            onChange={(e) => setClassType(e.target.value)}
+                                        >
+                                            <option value="Economy">Économique</option>
+                                            <option value="Premium">Premium</option>
+                                            <option value="Business">Affaires</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <Form.Group controlId="prixTotal" className="mb-3">
+                                        <Form.Label>Prix Total</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={prixTotal ? `${prixTotal} €` : "Calcul en cours..."}
+                                            readOnly
+                                        />
+                                    </Form.Group>
 
-                                        <Row>
-                                            <Col md={6}>
-                                                <Form.Group controlId="prixReservationTotal" className="mb-3">
-                                                    {/* <Form.Label>Prix Total de la Réservation</Form.Label> */}
-                                                    <Form.Control
-                                                        type="number"
-                                                        placeholder="Prix Total"
-                                                        required
-                                                        value={prixTotal}
-                                                        readOnly
-                                                        hidden
-                                                    />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Veuillez entrer un prix valide.
-                                                    </Form.Control.Feedback>
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
+                                    {error && <p className="text-danger">{error}</p>}
 
-                                        {error && <p style={{ color: 'red' }}>{error}</p>}
-
-                                        <div className="d-flex justify-content-around mt-4">
-                                            <Button
-                                                variant="outline-secondary"
-                                                onClick={handleViewTicket}
-                                                className="d-flex align-items-center"
-                                            >
-                                                <FaTicketAlt className="me-2" /> Voir le Billet
-                                            </Button>
-                                            <Button
-                                                variant="success"
-                                                type="submit"
-                                                className="d-flex align-items-center"
-                                                disabled={loading}
-                                            >
-                                                {loading ? (
-                                                    <>
-                                                        <Spinner
-                                                            as="span"
-                                                            animation="border"
-                                                            size="sm"
-                                                            role="status"
-                                                            aria-hidden="true"
-                                                        />{" "}
-                                                        Traitement...
-                                                    </>
-                                                ) : (
-                                                    <>Confirmer la Réservation</>
-                                                )}
-                                            </Button>
-                                        </div>
-                                    </Form>
-                                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                </Container>
-            </div>
+                                    <div className="text-center">
+                                        <Button type="submit" variant="primary" disabled={loading}>
+                                            {loading ? (
+                                                <>
+                                                    <Spinner animation="border" size="sm" /> Traitement...
+                                                </>
+                                            ) : (
+                                                "Confirmer la Réservation"
+                                            )}
+                                        </Button>
+                                    </div>
+                                </Form>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
         </>
     );
 };

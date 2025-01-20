@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getAeroports, deleteAeroport } from '../Api/Api';
 import AeroportAjout from './AeroportAjout';
 import AeroportModif from './AeroportModif';
-
 const AeroportPage = () => {
   const [aeroports, setAeroports] = useState([]);
-  const [currentAeroport, setCurrentAeroport] = useState(null); // Aéroport en cours de modification
-  const [view, setView] = useState('list'); // list, add, edit
+  const [currentAeroport, setCurrentAeroport] = useState(null);
+  const [view, setView] = useState('list');
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -40,7 +39,6 @@ const AeroportPage = () => {
     }
   };
 
-
   const handleEdit = (aeroport) => {
     setCurrentAeroport(aeroport);
     setView('edit');
@@ -53,10 +51,10 @@ const AeroportPage = () => {
 
   return (
     <div>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {view === 'list' && (
         <>
           <h3>Liste des Aéroports</h3>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
           <button className="btn btn-primary" onClick={handleAdd}>Ajouter un Aéroport</button>
           <table className="table table-bordered">
             <thead>
@@ -75,7 +73,6 @@ const AeroportPage = () => {
                   <td>{aeroport.nomAeroport}</td>
                   <td>{aeroport.villeAeroport}</td>
                   <td>{aeroport.paysAeroport}</td>
-
                   <td>
                     <button
                       onClick={() => handleEdit(aeroport)}
@@ -90,7 +87,6 @@ const AeroportPage = () => {
                       🗑️ Supprimer
                     </button>
                   </td>
-
                 </tr>
               ))}
             </tbody>
@@ -106,5 +102,6 @@ const AeroportPage = () => {
     </div>
   );
 };
+
 
 export default AeroportPage;

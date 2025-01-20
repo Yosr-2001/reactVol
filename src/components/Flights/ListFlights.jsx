@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { apiRequest } from '../../utils/api'; // Assuming apiRequest handles axios calls
+import axios from 'axios';  // Import axios
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import Navbar from '../Navbar/Navbar';
 import { FaPlane } from 'react-icons/fa';
@@ -20,11 +20,11 @@ const ListFlights = () => {
             try {
                 setIsLoading(true);
                 setError(null);
-                const response = await apiRequest('/vol', 'GET'); // Adjust the API endpoint as needed
-                if (Array.isArray(response)) {
-                    setFlights(response);
+                const response = await axios.get('http://127.0.0.1:8000/api/vols');
+
+                if (Array.isArray(response.data)) {
+                    setFlights(response.data);
                 } else {
-                    console.error('Unexpected response format:', response);
                     setError('Failed to fetch flights. Please try again later.');
                 }
             } catch (err) {
@@ -49,21 +49,21 @@ const ListFlights = () => {
                     <p className="text-danger">{error}</p>
                 ) : flights.length > 0 ? (
                     <Row>
-                        {flights.map((flight) => (
-                            <Col md={6} lg={4} key={flight.idVol} className="mb-4">
+                        {flights.map((flight, index) => (
+                            <Col md={6} lg={4} key={flight.idVol || `${flight.aeroportDepart?.villeAeroport}-${flight.aeroport_arrivee?.ville_aeroport}-${index}`} className="mb-4">
                                 <Card>
                                     <Card.Header as="h5" style={{ backgroundColor: '#e7e8e8', opacity: '90%' }}>
-                                        {flight.aeroportDepart?.villeAeroport || 'Unknown'} → {flight.aeroportArrivee?.villeAeroport || 'Unknown'}
+                                        {flight.aeroport_depart?.ville_aeroport || 'Unknown'} → {flight.aeroport_arrivee?.ville_aeroport || 'Unknown'}
                                     </Card.Header>
                                     <Card.Body>
-                                        <Card.Title>
-                                            <strong>Departure:</strong> {flight.aeroportDepart?.nomAeroport || 'Unknown'} ({flight.aeroportDepart?.villeAeroport || 'Unknown'}, {flight.aeroportDepart?.paysAeroport || 'Unknown'})<br />
-                                            <strong>Arrival:</strong> {flight.aeroportArrivee?.nomAeroport || 'Unknown'} ({flight.aeroportArrivee?.villeAeroport || 'Unknown'}, {flight.aeroportArrivee?.paysAeroport || 'Unknown'})
-                                        </Card.Title>
+
                                         <Card.Text>
-                                            <strong>Departure Time:</strong> {flight.heureDepart ? new Date(flight.heureDepart).toLocaleString() : 'Unknown'}<br />
-                                            <strong>Arrival Time:</strong> {flight.heureArrivee ? new Date(flight.heureArrivee).toLocaleString() : 'Unknown'}<br />
-                                            <strong>Price:</strong> <span style={{ color: 'green', fontWeight: 'bold' }}>{flight.prixVol || 'N/A'} DT</span>
+                                            <strong>Departure:</strong> {flight.heure_depart ? new Date(flight.heure_depart).toLocaleString() : 'Unknown'}<br />
+
+                                            <br></br>  <strong>Arrival:</strong> {flight.heure_arrivee ? new Date(flight.heure_arrivee).toLocaleString() : 'Unknown'}<br />
+
+                                            <strong>Prix:</strong>   <span style={{ color: 'red', marginLeft: '5px', fontWeight: '900' }}> {flight.prix ? `${flight.prix} Dt` : ''}<br />
+                                            </span>
                                         </Card.Text>
                                         <Button
                                             variant="primary"
@@ -81,6 +81,7 @@ const ListFlights = () => {
                             </Col>
                         ))}
                     </Row>
+
                 ) : (
                     <p>No flights available.</p>
                 )}

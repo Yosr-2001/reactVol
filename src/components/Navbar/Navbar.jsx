@@ -32,7 +32,7 @@ const Navbar = () => {
   return (
     <div className="navBar flex">
       <div className="navBarTwo flex">
-        <Link to="/" className="flightManagerText">
+        <Link to="/home" className="flightManagerText">
           Flight Manager
         </Link>  <ul className="menu flex">
           <Nav.Link className="listItem" as={Link} to="/home">Home</Nav.Link>

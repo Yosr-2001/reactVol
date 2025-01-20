@@ -1,36 +1,65 @@
-import React, { useState } from 'react';
-import { createAeroport } from '../Api/Api';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+const API_BASE_URL = "http://127.0.0.1:8000/api";
 
 const AeroportAjout = ({ refreshData }) => {
   const [formData, setFormData] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
+  const [errors, setErrors] = useState({});
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.nomAeroport || formData.nomAeroport.trim() === "") {
+      newErrors.nomAeroport = "Airport name is required.";
+    }
+    if (!formData.villeAeroport || formData.villeAeroport.trim() === "") {
+      newErrors.villeAeroport = "City is required.";
+    }
+    if (!formData.paysAeroport || formData.paysAeroport.trim() === "") {
+      newErrors.paysAeroport = "Country is required.";
+    }
+
+    return newErrors;
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
-    setError('');
-    console.log('Form Data:', formData);
+
+    const newAeroport = {
+      NomAeroport: formData.nomAeroport.trim(),
+
+      VilleAeroport: formData.villeAeroport.trim(),
+      PaysAeroport: formData.paysAeroport.trim(),
+    };
+
+    console.log("Sending payload:", newAeroport);
 
     try {
-      console.log('Creating Aeroport:', formData);
-      const response = await createAeroport(formData);
-      console.log('API Response:', response.data);
-      setFormData({});
-      setSubmitting(false);
-      refreshData();
+      const response = await axios.post(`${API_BASE_URL}/aeroports`, newAeroport);
+
+      console.log("Server response:", response.data);
+      if (response.status === 201) {
+        console.log("aeroport added successfully:", response.data);
+        setFormData({ NomAeroport: "", VilleAeroport: "", PaysAeroport: "" });
+        setErrors({});
+        alert("aeroport created successfully!");
+        navigate("/Dashboard/#aeroport");
+      } else {
+        throw new Error(`Failed to create Avion. Status code: ${response.status}`);
+      }
     } catch (error) {
-      console.error('Erreur lors de la soumission du formulaire', error);
-      console.log('Erreur Response:', error.response?.data); // Affichez les détails de la réponse
-      setError(`Erreur lors de la soumission du formulaire : ${error.response?.data?.message || error.message}`);
-      setSubmitting(false);
+      console.error("Error:", error.response?.data || error.message);
     }
   };
+
+
 
   return (
     <div>

@@ -1,6 +1,5 @@
 import './App.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import Navbar from './components/Navbar/Navbar'
 import Home from './components/Home/Home'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Signin from './components/SignInUp/signin'
@@ -9,12 +8,11 @@ import AvionForm from './components/Avion/AvionForm'
 import Offers from './components/Offre/Offres'
 import Dashboard from './components/Dashboard/DashBoard'
 import Dash from './components/Dash'
-import OffreList from './components/Offre/OfferList'
-
+import SearchFlights from './components/Search/SearchFlights';
 
 import Forbidden from './utils/Forbidden'
 import About from './About/About'
-import SearchFlights from './components/Search/SearchFlights'
+
 // import ProtectedRoute from './utils/ProtectedRoute'
 import PassengerForm from './components/Passager/Passager'
 import Results from './components/Search/Results'
@@ -26,6 +24,9 @@ import HomePage from './pages/HomePage'
 import AvionPage from './pages/AvionPage'
 import axios from "axios";
 import { useEffect, useState } from 'react'
+import AeroportPage from './pages/AeroportPage'
+import AeroportAjout from './pages/AeroportAjout'
+import VolAjout from './pages/VolAjout'
 
 function App() {
 
@@ -53,13 +54,12 @@ function App() {
             <Route path="/forbidden" element={<Forbidden />} />
 
             <Route path="/" element={<Signin />} />
-            {/**user pages  */}
+
             <Route path="/home" element={<Home />} />
-            <Route path="/search" element={<SearchFlights />} />
+
             <Route path="/vols" element={<ListFlights />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/dash" element={<Dash />} />
-            {/*<Route path="/offre" element={<OffreList />} />*/}
 
             <Route path="/about" element={<About />} />
             <Route path="/results" element={<Results />} />
@@ -70,9 +70,12 @@ function App() {
             <Route path="/reservations" element={<HistoriqueReservations />} />
             <Route path="/homePage" element={<HomePage />} />
             <Route path="/avionPage" element={<AvionPage />} />
-            {/**admin pages*/}
+            <Route path="/aeroportPage" element={<AeroportPage />} />
+            <Route path="/add-aeroport" element={<AeroportAjout />} />
+            <Route path="/add-vol" element={<VolAjout />} />
+            <Route path="/search" element={<SearchFlights />} />
 
-            *       <Route
+            <Route
               path="/dashboard"
             // element={<ProtectedRoute allowedRoles={['Admin']} 
 
@@ -86,7 +89,7 @@ function App() {
             >
               <Route index element={<AvionForm />} />
             </Route>
-  </Routes>
+          </Routes>
 
         </Router>
       </div>

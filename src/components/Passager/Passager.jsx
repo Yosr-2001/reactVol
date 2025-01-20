@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import Navbar from "../Navbar/Navbar";
-import { FaGooglePay } from "react-icons/fa";
-import { apiRequest } from "../../utils/api";
+
 
 const PassengerForm = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const flight = location.state?.selectedFlight || {};
     const [prixTotal, setPrixTotal] = useState(0);
     const [error, setError] = useState(null);
+
+    const flight = location.state?.selectedFlight || {};
+    console.log("Selected Flight:", flight);
 
     const [formData, setFormData] = useState({
         nomPassager: "",
@@ -22,39 +23,29 @@ const PassengerForm = () => {
         classType: "Economy",
     });
 
-    // Update form data on user input
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    // Calculate total price based on class and number of passengers
     const calculPrixReservationTotal = (prixVolBrut, classType, nbPassagers = 1) => {
         const multiplier = classType === "Business" ? 2.0 : classType === "Premium" ? 1.5 : 1.0;
         return prixVolBrut * multiplier * nbPassagers;
     };
 
-    // Update total price when class type or flight price changes
     useEffect(() => {
-        if (flight?.prixVol) {
-            const total = calculPrixReservationTotal(flight.prixVol, formData.classType, 1);
+        if (flight?.prix) {
+            const total = calculPrixReservationTotal(flight.prix, formData.classType, 1);
             setPrixTotal(total);
         }
-    }, [formData.classType, flight.prixVol]);
+    }, [formData.classType, flight.prix]);
 
-    // Handle form submission
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
 
-        // Validate passport format
-        const passportRegex = /^[A-Z]{1}[0-9]{8}$/;
-        if (!passportRegex.test(formData.numeroPasseport)) {
-            setError("Le numéro de passeport doit commencer par une lettre majuscule suivie de 8 chiffres (ex: E12345678).");
-            return;
-        }
-
-        // Prepare request body
         const body = {
             NomPassager: formData.nomPassager,
             PrenomPassager: formData.prenomPassager,
@@ -64,29 +55,56 @@ const PassengerForm = () => {
             NumeroPasseport: formData.numeroPasseport,
         };
 
-        try {
-            // Send passenger data to API
-            const response = await apiRequest("http://localhost:5235/api/passagers", "POST", body);
-            const idPassager = response.idPassager; // Assuming the API response includes idPassager
-            console.log("Passager saved:", response);
+        console.log("Payload envoyé :", body);
 
-            // Navigate to payment page with necessary data
-            navigate("/paiement", { state: { prixTotal, formData, idPassager, idVol: flight.idVol } });
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/passagers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error("Erreur de réponse API :", errorResponse); // Ajouté pour plus de clarté
+                throw new Error('Failed to submit form');
+            }
+
+            const data = await response.json();
+            const idPassager = data.idPassager;
+            const numeroPasseport = data.numeroPasseport
+            console.log('Passager saved:', data);
+
+            navigate('/paiement', {
+                state: {
+                    formData: formData,
+                    idPassager: idPassager,
+                    vol: flight,
+                    numeroPasseport: numeroPasseport
+                },
+            });
         } catch (err) {
-            console.error("Error submitting form:", err);
-            setError("Il y a eu un problème lors de la réservation.");
+            console.error('Error submitting form:', err);
+            setError('Il y a eu un problème lors de la réservation.');
         }
     };
+
+
 
     return (
         <>
             <Navbar />
             <Container className="mt-5">
                 <h2 className="mb-4">
-                    Vol sélectionné : <strong>{flight.aeroportDepart?.villeAeroport} → {flight.aeroportArrivee?.villeAeroport}</strong>
+                    Vol sélectionné : <strong>{flight.aeroport_depart?.
+                        ville_aeroport
+
+                    } → {flight.aeroport_arrivee?.
+                        ville_aeroport}</strong>
                 </h2>
                 <Form onSubmit={handleSubmit}>
-                    {/* Passenger Information */}
                     <Row className="mb-3">
                         <Col md={6}>
                             <Form.Group controlId="nomPassager" className="mb-3">
@@ -152,7 +170,6 @@ const PassengerForm = () => {
                         </Col>
                     </Row>
 
-                    {/* Phone and Passport */}
                     <Row className="mb-3">
                         <Col md={6}>
                             <Form.Group controlId="telephonePassager" className="mb-3">
@@ -184,14 +201,12 @@ const PassengerForm = () => {
                         </Col>
                     </Row>
 
-                    {/* Error Message */}
                     {error && <p style={{ color: "red" }}>{error}</p>}
 
-                    {/* Submit Button */}
                     <div className="text-center">
                         <Button variant="primary" type="submit">
-                            Valider et Passer au paiement{" "}
-                            <FaGooglePay style={{ marginLeft: "10px", height: "30px", width: "30px" }} />
+                            Valider
+
                         </Button>
                     </div>
                 </Form>
